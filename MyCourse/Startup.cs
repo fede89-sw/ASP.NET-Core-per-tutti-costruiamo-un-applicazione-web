@@ -16,8 +16,10 @@ namespace MyCourse
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(); // devo aggiungere questo 'service' per usare il 'routing'
-            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            // devo aggiungere questo 'service' per usare il 'routing';
+            // SetCompatibilityVersion è perchè ho aggiornato l'app a 2.2= dico ai 'services' di comportarsi secondo le tecniche introdotte nella versione 2.2
+            // (dopo averla installata e aggiornata nella app, cambiando i riferimenti nei file che specificano la versione di dotnet)
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

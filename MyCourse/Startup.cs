@@ -15,6 +15,7 @@ namespace MyCourse
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(); // devo aggiungere questo 'service' per usare il 'routing'
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -24,10 +25,26 @@ namespace MyCourse
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseStaticFiles();
+            // app.Run(async (context) =>
+            // {
+            //     await context.Response.WriteAsync("Hello World!");
+            // });
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
+            // Middleware di Routing
+            // app.UseMvcWithDefaultRoute();
+            app.UseMvc( routeBuilder => { // lambda expression
+                // definisco una 'Route' a cui passo il nome e un template; Praticamente definisco la Route come faccio
+                // in Django nel file urls.py; il percorso è il template, il nome della route è 'default'. 
+                // ES. courses/detail/5 -> controller=courses, action=detail, parametro di action=5 (Queste informazioni sono presenti in 'Route Data')
+                routeBuilder.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); 
+                // posso settare dei valori di default dell'indirizzo facendo:
+                /*  
+                    {controller=Home} -> controller di default = Home
+                    {action=Index} -> action di default = Index
+                    {id?} -> id è un parametro opzionale
+                */
+                // In questo modo anche se non do nell'url le info necessarie ho cmq un indirizzo di default(che corrisponde alla homepage)
             });
         }
     }

@@ -3,4 +3,30 @@
 } *@
 @* 'estendo' _Layout.cshtml, come in Django faccio {% extends 'base.html' %} *@
 
-<h1>Sono la View per l'Action Index del CoursesController</h1>
+<h1>Catalogo dei Corsi</h1>
+@for (int i = 1; i <= 10; i++)
+{
+<div class="row">
+    <div class="col-md-1">
+        <img src="~/town.jpg" alt="town" width="50px">
+    </div>
+    <div class="col-md-5">
+        <h2>Titolo del Corso</h2>
+        <p>di Nome Autore</p>
+    </div>
+    <div class="col-md-2">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star-half-alt"></i>
+        <i class="far fa-star"></i>
+    </div>
+    <div class="col-md-2">
+        EUR 10,99 <br><s>EUR 12,99</s>
+    </div>
+    <div class="col-md-2">
+        <a asp-action="Detail" asp-route-id="5" class="btn btn-outline-primary">Dettagli</a>
+    </div>
+</div>
+}
+<a asp-action="Detail" asp-route-id="5">Corso 5</a>

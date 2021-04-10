@@ -7,11 +7,13 @@ namespace MyCourse.Controllers // per convezione nome del progetto e cartella in
         // Metodi Action
         public IActionResult Index(){
             // metodo Action per mostrare la lista di tutti i corsi
-            return Content("Sono il metodo Index"); // 'Content' restituisce una stringa statica
+            // return Content("Sono il metodo Index"); // 'Content' restituisce una stringa statica
+            return View(); // ritorna la view che per convenzione deve essere 'Views/Courses/Index.cshtml'
         }
         public IActionResult Detail(int id) {
             // metodo per i dettagli di un singolo corso
-            return Content($"Sono il metodo Detail, ho ricevuto come parametro: {id}");
+            // return Content($"Sono il metodo Detail, ho ricevuto come parametro: {id}");
+            return View();
         }
     }
 }

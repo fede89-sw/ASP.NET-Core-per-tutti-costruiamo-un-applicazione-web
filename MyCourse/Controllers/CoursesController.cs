@@ -7,10 +7,12 @@ namespace MyCourse.Controllers // per convezione nome del progetto e cartella in
 {
     public class CoursesController : Controller // derivo da classe base 'Controllers'
     {
-        // Costruttore ( ctor + TAB)
-        private readonly CourseService courseService;
-        public CoursesController(CourseService courseService) // (CTRL + . su 'courseService', 'initialize field from parameter')
+        // rendiamo CourseController debolmente dipendente da 'CourseService', in modo che possa volendo essere sostituito in futuro
+        // con altre classi che implementino i metodi definiti in ICourseService, e che CourseController usa nei metodi Action
+        private readonly ICourseService courseService;
+        public CoursesController(ICourseService courseService) // (CTRL + . su 'courseService', 'initialize field from parameter')
         {
+            // Costruttore ( ctor + TAB)
             this.courseService = courseService;
 
         }

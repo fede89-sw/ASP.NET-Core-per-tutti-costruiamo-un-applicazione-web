@@ -15,15 +15,20 @@ namespace MyCourse
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+
+        // ConfigureServices serve tenere una sorta di registro dei nostri servizi, in cui andiamo a legare
+        // delle Interfacce ad implementazioni concrete (eseguite dalle Classi)
         public void ConfigureServices(IServiceCollection services)
         {
             // devo aggiungere questo 'service' per usare il 'routing';
             // SetCompatibilityVersion è perchè ho aggiornato l'app a 2.2= dico ai 'services' di comportarsi secondo le tecniche introdotte nella versione 2.2
             // (dopo averla installata e aggiornata nella app, cambiando i riferimenti nei file che specificano la versione di dotnet)
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddTransient<CourseService>(); 
-            // diciamo ad ASP.NET Core che deve preparsi alla gestione di oggetti di tipo 'CourseService', per cui quando incotra un 
-            // componente come il nostro CourseController che ha una dipendeza da esse, è ASP stesso che deve costruirglielo e passarglielo
+            services.AddTransient<ICourseService, CourseService>(); 
+            // diciamo ad ASP.NET Core che ogni volta che incontra un componente, come il nostro CourseController che ha una dipendenza 
+            // dall'interfaccia ICourseService, in realtà construisci un CurseService(in qnt non può creare un istanza di ICourseService, non 
+            // essendo una classe ma un'interfaccia); In qst modo abbiamo reso i componenti debolmente accoppiati, non dipendendo più direttamente
+            //  da CourseService, che può essere sostituito cn qualsiasi classe che implementi i metodi definiti in ICourseService).
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

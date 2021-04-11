@@ -7,7 +7,7 @@ using MyCourse.Models.ViewModels;
 namespace MyCourse.Models.Services.Application
 {
     // Classe che rappresente il nostro primo servizio applicativo
-    public class CourseService
+    public class CourseService : ICourseService //facendo derivare dall'interfaccia, tt i metodi pubblici di questa classe devono corrispondere a ql definiti in 'ICourseService'
     {
         // la classe conterrà dei metodi che ci restituiranno i dati dei corsi in forma di oggetti ViewModel
         public List<CourseViewModel> getCourses() // metodo che torna la lista dei corsi, che sono oggetti 'CourseViewModel'

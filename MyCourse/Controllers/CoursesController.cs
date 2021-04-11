@@ -16,6 +16,7 @@ namespace MyCourse.Controllers // per convezione nome del progetto e cartella in
                                                      // uso var invece di fare (CourseService courseService = new CourseService();) 
                                                      // in quanto sto istanziando una classe con la keyword 'new' quindi il compilatore sa che l'oggetto 'courseService' è di quel tipo 
             List<CourseViewModel> courses_list = courseService.getCourses(); // courses_list è variabile di tipo 'List' di oggetti 'CourseViewModel'
+            ViewData["Title"] = "MyCourse - Catalogo dei Corsi";
             return View(courses_list); // ritorna la view che per convenzione deve essere 'Views/Courses/Index.cshtml'; passo la variabile 'courses_list'
         }
         public IActionResult Detail(int id) {
@@ -27,6 +28,7 @@ namespace MyCourse.Controllers // per convezione nome del progetto e cartella in
             // 'CourseDetailViewModel' nome scelto da noi. Creeremo il file 'CourseDetailModel.cs' in 'ViewModel' che definisce l'oggetto
             // 'CourseDetailViewModel'. Esso è formato da tutte le caratteristiche definite in 'CourseViewModel'.
             // Andremo infatti a derivare da quella classe per non ripetere il codice 
+            ViewData["Title"] = "MyCourse - " + course_detail.Title;
             return View(course_detail);
         }
     }

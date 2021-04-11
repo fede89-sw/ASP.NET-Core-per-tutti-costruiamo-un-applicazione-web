@@ -21,7 +21,13 @@ namespace MyCourse.Controllers // per convezione nome del progetto e cartella in
         public IActionResult Detail(int id) {
             // metodo per i dettagli di un singolo corso
             // return Content($"Sono il metodo Detail, ho ricevuto come parametro: {id}");
-            return View();
+
+            var courseService = new CourseService();
+            CourseDetailViewModel course_detail = courseService.getCourseDetail(id);
+            // 'CourseDetailViewModel' nome scelto da noi. Creeremo il file 'CourseDetailModel.cs' in 'ViewModel' che definisce l'oggetto
+            // 'CourseDetailViewModel'. Esso è formato da tutte le caratteristiche definite in 'CourseViewModel'.
+            // Andremo infatti a derivare da quella classe per non ripetere il codice 
+            return View(course_detail);
         }
     }
 }

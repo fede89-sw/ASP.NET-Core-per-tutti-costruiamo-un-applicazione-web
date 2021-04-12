@@ -12,8 +12,9 @@ namespace MyCourse.Models.Services.Application
 
         public AdoNetCourseService(IDatabaseService db)
         {
-            // rendo dipendente AdoNetCourseService da IDatabaseService,
-            // il servizio infrastrutturale che sa come accedere al DB.
+            // rendo dipendente, tramite il costruttore, AdoNetCourseService da IDatabaseService,
+            // il servizio infrastrutturale che sa come accedere al DB, in quanto senza questo 
+            // infatti non saprebbe come ricavare i dati dal db. Hai bisogno di lui per funzionare.
             this.db = db;
             
         }
@@ -26,7 +27,7 @@ namespace MyCourse.Models.Services.Application
         List<CourseViewModel> ICourseService.getCourses()
         {
             string query = "SELECT * FROM Courses";
-            DataSet dataSet = db.Query(query); 
+            DataSet query_result = db.Query(query); 
             throw new System.NotImplementedException();
         }
     }

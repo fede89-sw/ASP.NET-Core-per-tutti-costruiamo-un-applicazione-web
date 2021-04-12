@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using MyCourse.Models.Services.Application;
+using MyCourse.Models.Services.Infrastructure;
 
 namespace MyCourse
 {
@@ -24,11 +25,12 @@ namespace MyCourse
             // SetCompatibilityVersion è perchè ho aggiornato l'app a 2.2= dico ai 'services' di comportarsi secondo le tecniche introdotte nella versione 2.2
             // (dopo averla installata e aggiornata nella app, cambiando i riferimenti nei file che specificano la versione di dotnet)
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddTransient<ICourseService, CourseService>(); 
+            services.AddTransient<ICourseService, AdoNetCourseService>(); 
             // diciamo ad ASP.NET Core che ogni volta che incontra un componente, come il nostro CourseController che ha una dipendenza 
             // dall'interfaccia ICourseService, in realtà construisci un CurseService(in qnt non può creare un istanza di ICourseService, non 
             // essendo una classe ma un'interfaccia); In qst modo abbiamo reso i componenti debolmente accoppiati, non dipendendo più direttamente
             //  da CourseService, che può essere sostituito cn qualsiasi classe che implementi i metodi definiti in ICourseService).
+            services.AddTransient<IDatabaseService, DatabaseService>(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

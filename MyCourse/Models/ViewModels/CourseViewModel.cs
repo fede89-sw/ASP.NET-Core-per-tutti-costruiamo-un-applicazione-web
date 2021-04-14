@@ -25,8 +25,10 @@ namespace MyCourse.Models.ViewModels
             var courseViewModel = new CourseViewModel {
                 Title = Convert.ToString(courseRow["Title"]), // oppure Title = (string) courseRow["Title"]
                 ImagePath = Convert.ToString(courseRow["ImagePath"]),
-                Author = Convert.ToString(courseRow["Author"]),
-                Rating = Convert.ToDouble(courseRow["Rating"]),
+                // Author = Convert.ToString(courseRow["Author"]),
+                Author = (string) courseRow["Author"],
+                // Rating = Convert.ToDouble(courseRow["Rating"]),
+                Rating = (double) courseRow["Rating"],
                 FullPrice = new Money(
                     Enum.Parse<Currency>(Convert.ToString(courseRow["FullPrice_Currency"])),
                     Convert.ToDecimal(courseRow["FullPrice_Amount"])

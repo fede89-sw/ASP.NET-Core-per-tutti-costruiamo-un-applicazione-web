@@ -26,9 +26,22 @@ namespace MyCourse.Models.Services.Application
 
         List<CourseViewModel> ICourseService.getCourses()
         {
-            string query = "SELECT * FROM Courses";
-            DataSet query_result = db.Query(query); 
-            throw new System.NotImplementedException();
+            string query = "SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses";
+            DataSet query_result = db.Query(query);
+
+            // prendo la tabella coi risultati presenti eseguendo la query
+            var dataTable = query_result.Tables[0];
+
+            // creo variabile per contenere la lista dei corsi, che verrà restituita poi alla Razor Page
+            var courseList = new List<CourseViewModel>();
+
+            // ciclo le righe della tabella coi risultati per salvarle i 'course' e aggiungere ogni corso alla lista dei corsi
+            foreach(DataRow courseRow in dataTable.Rows)
+            {
+                CourseViewModel course = CourseViewModel.FromDataRow(courseRow); // faccio il mapping delle righe dei risultati
+                courseList.Add(course);
+            }
+            return courseList;
         }
     }
 }

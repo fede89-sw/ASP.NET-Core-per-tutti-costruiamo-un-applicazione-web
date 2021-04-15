@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using MyCourse.Models.Services.Infrastructure;
@@ -21,7 +22,37 @@ namespace MyCourse.Models.Services.Application
 
         CourseDetailViewModel ICourseService.getCourseDetail(int id)
         {
-            throw new System.NotImplementedException();
+            // eseguo 2 query (SqliteCommando posso farne più contemporaneamente ) che ritorneranno 2 DataTable presenti in in DataSet
+            string query = $@"SELECT Id, Title, Description, ImagePath, 
+                                     Author, Rating, FullPrice_Amount, FullPrice_Currency, 
+                                     CurrentPrice_Amount, CurrentPrice_Currency
+                            FROM Courses WHERE Id={id}; 
+                            
+                            SELECT Id, Title, Description, Duration 
+                            FROM Lessons WHERE CourseId={id}";
+
+            // Chiamo metodo per eseguire la query; sarà un DataSet formato da 2 DataTable, perchè ho eseguito 2 query
+            DataSet dataSet = db.Query(query);
+
+            // Tables[0] -> primo DataTable dei risultati della prima query, del primo SELECT (Singolo Corso)
+            var courseTable = dataSet.Tables[0];
+            if (courseTable.Rows.Count != 1) {
+                // se le righe sono diverse da uno sollevo eccezzione(un corso trovato nel Database tornerà per forza una sola riga)
+                throw new InvalidOperationException($"Did not return exactly 1 row for Course {id}");
+            }
+            var courseRow = courseTable.Rows[0]; // leggo la riga della table
+            var courseDetailViewModel = CourseDetailViewModel.FromDataRow(courseRow); //mappatura che mi torna oggetto CourseDetailViewModel da un DataRow
+
+            // Tables[1] -> primo DataTable dei risultati della seconda query, del secondo SELECT (lezioni del corso)
+            var lessonDataTable = dataSet.Tables[1];
+
+            foreach(DataRow lessonRow in lessonDataTable.Rows) {
+                //ciclo le lezioni perchè ce ne possono essere molte per un solo corso (relazioni uno a molti)
+                LessonViewModel lessonViewModel = LessonViewModel.FromDataRow(lessonRow); //mappatura che mi torna oggetto LessonViewModel da un DataRow
+                //aggiungo l'oggetto 'LessonViewModel' ovvero la singola lezione alla lista di lezioni del corso 
+                courseDetailViewModel.Lessons.Add(lessonViewModel);
+            }
+            return courseDetailViewModel; 
         }
 
         List<CourseViewModel> ICourseService.getCourses()

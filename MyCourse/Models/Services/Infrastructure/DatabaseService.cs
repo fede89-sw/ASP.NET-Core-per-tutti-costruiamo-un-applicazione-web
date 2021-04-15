@@ -22,15 +22,25 @@ namespace MyCourse.Models.Services.Infrastructure
                         // Un DataSet è un oggetto che contiene una o piu tabelle di risultati che arrivano dal database,
                         //  per poi passarle ad altri componenti dell'applicazione
                         var dataSet = new DataSet(); 
-                        // il DataSet è una collezione di DataTable, quindi credo la table che assegno al DataSet
-                        var dataTable = new DataTable();
 
                         // stratagemma per risolvere un bug del pacchetto Microsoft in 'dataTable.Load(results);'
                         // In una versione successiva lo risolvono e non serve questa riga sotto.
                         dataSet.EnforceConstraints = false;
 
-                        dataSet.Tables.Add(dataTable);
-                        dataTable.Load(results); // legge riga per riga un oggetto 'DataReader' e li salva nella tabella del DataTable
+                        // se eseguo più query contemporaneamente mi serviranno piu tabelle, una per ogni istruzione SELECT fatta;
+                        // Con piu tabelle di risultati mi servono altrettanti oggetti 'DataTable' da mettere poi nel DataSet.
+                        // Faccio un ciclo do - while finchè l'oggetto DataReader è aperto, in quanto il DataTable , quando invochiamo il suo metodo 'Load()'guarda
+                        // se all'interno del DataReader ci sono altre tabelle di risultati da leggere; se ci sono lascia il DataReader 
+                        // aperto, se no lo chiude.
+                        do
+                        {
+                            // il DataSet è una collezione di DataTable, quindi credo la table che assegno al DataSet
+                            var dataTable = new DataTable();
+
+                            dataSet.Tables.Add(dataTable);
+                            dataTable.Load(results); // legge riga per riga un oggetto 'DataReader' e li salva nella tabella del DataTable
+                        }while(!results.IsClosed);
+
                         return dataSet;
                     }
                 }

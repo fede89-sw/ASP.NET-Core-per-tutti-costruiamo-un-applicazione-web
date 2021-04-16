@@ -22,14 +22,13 @@ namespace MyCourse.Models.Services.Application
 
         CourseDetailViewModel ICourseService.getCourseDetail(int id)
         {
-            // eseguo 2 query (SqliteCommando posso farne più contemporaneamente ) che ritorneranno 2 DataTable presenti in in DataSet
-            string query = $@"SELECT Id, Title, Description, ImagePath, 
-                                     Author, Rating, FullPrice_Amount, FullPrice_Currency, 
-                                     CurrentPrice_Amount, CurrentPrice_Currency
-                            FROM Courses WHERE Id={id}; 
-                            
-                            SELECT Id, Title, Description, Duration 
-                            FROM Lessons WHERE CourseId={id}";
+            // eseguo 2 query (SqliteCommando posso farne più contemporaneamente ) che ritorneranno 2 DataTable presenti in in DataSet;
+            // il simbolo '$' prima della stringa è come la f-string in python(uguali a come si fannoi in javascript);
+            // il simbolo '@' vuol dire che stiamo definendo una stringa su più righe; cioè una stringa composta da più righe diverse(come 2 istruzioni diverse)
+            FormattableString query = $@"SELECT Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id};
+                                         SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId={id}";
+            // la FormattableString è una stringa che permette di tenere separati la parte statica, di sola stringa e i paramentri
+            // che la compongono; query.Format da la parte statica, query.GetArgumets() ritorna i parametri;
 
             // Chiamo metodo per eseguire la query; sarà un DataSet formato da 2 DataTable, perchè ho eseguito 2 query
             DataSet dataSet = db.Query(query);
@@ -57,7 +56,7 @@ namespace MyCourse.Models.Services.Application
 
         List<CourseViewModel> ICourseService.getCourses()
         {
-            string query = "SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses";
+            FormattableString query = $"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses";
             DataSet query_result = db.Query(query);
 
             // prendo la tabella coi risultati presenti eseguendo la query

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using MyCourse.Models.Services.Infrastructure;
 using MyCourse.Models.ViewModels;
 
@@ -20,7 +21,7 @@ namespace MyCourse.Models.Services.Application
             
         }
 
-        CourseDetailViewModel ICourseService.getCourseDetail(int id)
+        public async Task<CourseDetailViewModel> getCourseDetailAsync(int id)
         {
             // eseguo 2 query (SqliteCommando posso farne più contemporaneamente ) che ritorneranno 2 DataTable presenti in in DataSet;
             // il simbolo '$' prima della stringa è come la f-string in python(uguali a come si fannoi in javascript);
@@ -31,7 +32,7 @@ namespace MyCourse.Models.Services.Application
             // che la compongono; query.Format da la parte statica, query.GetArgumets() ritorna i parametri;
 
             // Chiamo metodo per eseguire la query; sarà un DataSet formato da 2 DataTable, perchè ho eseguito 2 query
-            DataSet dataSet = db.Query(query);
+            DataSet dataSet = await db.QueryAsync(query);
 
             // Tables[0] -> primo DataTable dei risultati della prima query, del primo SELECT (Singolo Corso)
             var courseTable = dataSet.Tables[0];
@@ -54,10 +55,10 @@ namespace MyCourse.Models.Services.Application
             return courseDetailViewModel; 
         }
 
-        List<CourseViewModel> ICourseService.getCourses()
+        public async Task<List<CourseViewModel>> getCoursesAsync()
         {
             FormattableString query = $"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses";
-            DataSet query_result = db.Query(query);
+            DataSet query_result = await db.QueryAsync(query);
 
             // prendo la tabella coi risultati presenti eseguendo la query
             var dataTable = query_result.Tables[0];

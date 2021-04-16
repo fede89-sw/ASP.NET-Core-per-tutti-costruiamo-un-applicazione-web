@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 
 namespace MyCourse.Models.Services.Infrastructure
@@ -8,7 +9,7 @@ namespace MyCourse.Models.Services.Infrastructure
     public class DatabaseService : IDatabaseService
     {
         // Con AdoNet l'oggetto con un risultato query è di tipo 'DataSet'
-        public DataSet Query(FormattableString formattableQuery)
+        public async Task<DataSet> QueryAsync(FormattableString formattableQuery)
         {
 
             //Creiamo dei SqliteParameter a partire dalla FormattableString
@@ -37,13 +38,13 @@ namespace MyCourse.Models.Services.Infrastructure
             // tipo di database scelto; consulta: https://www.connectionstrings.com/
             using(var connection = new SqliteConnection("Data Source=Data/MyCourse.db"))
             { 
-                connection.Open(); // mi faccio dare una connessione dal 'connection pool'
+                await connection.OpenAsync(); // mi faccio dare una connessione dal 'connection pool'
                 using(var command = new SqliteCommand(query, connection)) // oggetto 'SqliteCommand' per inviare una query al database
                 {
                     // aggiungo i parametri creati sopra, con il valore passato da barra URL, per proteggermi dalla Query Injection
                     command.Parameters.AddRange(sqliteParameters);
                     
-                    using(var results = command.ExecuteReader()) // esegue una query che torna un oggetto 'SqliteDataReader' da cui possiamo leggere i risultati una riga alla volta
+                    using(var results = await command.ExecuteReaderAsync()) // esegue una query che torna un oggetto 'SqliteDataReader' da cui possiamo leggere i risultati una riga alla volta
                     {
                         // variabile che restituirò con i risultati della query da passare al servizio applicativo;
                         // Un DataSet è un oggetto che contiene una o piu tabelle di risultati che arrivano dal database,

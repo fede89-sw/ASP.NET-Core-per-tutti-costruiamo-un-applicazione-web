@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc; // per derivare da classe 'controller'
 using MyCourse.Models.Services.Application;
 using MyCourse.Models.ViewModels;
@@ -7,24 +8,31 @@ namespace MyCourse.Controllers // per convezione nome del progetto e cartella in
 {
     public class CoursesController : Controller // derivo da classe base 'Controllers'
     {
+        // rendiamo CourseController debolmente dipendente da 'CourseService', in modo che possa volendo essere sostituito in futuro
+        // con altre classi che implementino i metodi definiti in ICourseService, e che CourseController usa nei metodi Action
+        private readonly ICourseService courseService;
+        public CoursesController(ICourseService courseService) // (CTRL + . su 'courseService', 'initialize field from parameter')
+        {
+            // Costruttore ( ctor + TAB)
+            this.courseService = courseService;
+
+        }
         // Metodi Action
-        public IActionResult Index(){
+        public async Task<IActionResult> Index()
+        {
             // metodo Action per mostrare la lista di tutti i corsi
             // return Content("Sono il metodo Index"); // 'Content' restituisce una stringa statica
 
-            var courseService = new CourseService(); // creo istanza di classe 'CourseService';
-                                                     // uso var invece di fare (CourseService courseService = new CourseService();) 
-                                                     // in quanto sto istanziando una classe con la keyword 'new' quindi il compilatore sa che l'oggetto 'courseService' è di quel tipo 
-            List<CourseViewModel> courses_list = courseService.getCourses(); // courses_list è variabile di tipo 'List' di oggetti 'CourseViewModel'
+            List<CourseViewModel> courses_list = await courseService.getCoursesAsync(); // courses_list è variabile di tipo 'List' di oggetti 'CourseViewModel'
             ViewData["Title"] = "MyCourse - Catalogo dei Corsi";
             return View(courses_list); // ritorna la view che per convenzione deve essere 'Views/Courses/Index.cshtml'; passo la variabile 'courses_list'
         }
-        public IActionResult Detail(int id) {
+        public async Task<IActionResult> Detail(int id)
+        {
             // metodo per i dettagli di un singolo corso
             // return Content($"Sono il metodo Detail, ho ricevuto come parametro: {id}");
 
-            var courseService = new CourseService();
-            CourseDetailViewModel course_detail = courseService.getCourseDetail(id);
+            CourseDetailViewModel course_detail = await courseService.getCourseDetailAsync(id);
             // 'CourseDetailViewModel' nome scelto da noi. Creeremo il file 'CourseDetailModel.cs' in 'ViewModel' che definisce l'oggetto
             // 'CourseDetailViewModel'. Esso è formato da tutte le caratteristiche definite in 'CourseViewModel'.
             // Andremo infatti a derivare da quella classe per non ripetere il codice 

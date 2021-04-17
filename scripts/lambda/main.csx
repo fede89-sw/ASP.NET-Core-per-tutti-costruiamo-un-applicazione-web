@@ -1,3 +1,6 @@
+//Per fare il debug di questi esempi, devi prima installare il global tool dotnet-script con questo comando:
+//dotnet tool install -g dotnet-script
+//Trovi altre istruzioni nel file /scripts/readme.md
 // Prove di Lambda Expression
 
 // Func è il tipo ricevuto da una Lambda che ritorna un valore

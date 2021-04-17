@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MyCourse.Models.Entities
 {
-    public partial class Lessons
+    public partial class Lesson
     {
         public long Id { get; set; }
         public long CourseId { get; set; }
@@ -12,6 +12,6 @@ namespace MyCourse.Models.Entities
         public string Duration { get; set; }
 
         // relazione inversa verso il Corso
-        public virtual Courses Course { get; set; }
+        public virtual Course Course { get; set; }
     }
 }

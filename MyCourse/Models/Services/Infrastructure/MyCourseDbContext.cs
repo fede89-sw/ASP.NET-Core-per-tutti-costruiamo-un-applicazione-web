@@ -103,8 +103,8 @@ namespace MyCourse.Models.Services.Infrastructure
                 // Il mapping delle relazioni lo fai solo una volta, o dal punto di vista di Courses come abbiamo fatto noi o nell'entità
                 // Lessons; in quel caso sarebbe stata:
 
-                // entity.HasOne(course => course.Course)
-                //         .WithMany(lesson => lesson.Lessons);
+                // entity.HasOne(lesson => lesson.Course)
+                //         .WithMany(course => course.Lessons);
                 #endregion
 
                 //la region mi permette di creare un area che posso comprimere come visualizzazione in VSCode

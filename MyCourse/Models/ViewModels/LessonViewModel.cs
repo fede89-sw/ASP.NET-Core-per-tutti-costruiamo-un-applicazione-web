@@ -9,7 +9,6 @@ namespace MyCourse.Models.ViewModels
         public string Title { get; set; }
         public string Description { get; set; }
         public TimeSpan Duration { get; set; }
-        // TimeSpan in C# è il tipo che identifica le durate temporali
 
         public static LessonViewModel FromDataRow(DataRow dataRow)
     {

@@ -5,7 +5,6 @@ namespace MyCourse.Models.ValueTypes
 {
     public class Money
     {
-        // classe con 2 proprietà: Amount e Currency
         public Money() : this(Currency.EUR, 0.00m)
         {
         }
@@ -17,7 +16,6 @@ namespace MyCourse.Models.ValueTypes
         private decimal amount = 0;
         public decimal Amount
         { 
-            // metodo per il valore di vendita del corso (usa decimal quando devi trattare prezzi )
             get
             {
                 return amount;
@@ -32,8 +30,6 @@ namespace MyCourse.Models.ValueTypes
         }
         public Currency Currency
         {
-            // rappresenta la valuta. Il tipo Currency da la possibilità di scegliere solo tra
-            // le opzioni di quella classe. Se avessi usato una 'string' si poteva mettere ciò che si voleva
             get; set;
         }
 

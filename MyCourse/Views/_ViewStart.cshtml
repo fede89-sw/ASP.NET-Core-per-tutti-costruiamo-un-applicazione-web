@@ -1,16 +1,3 @@
 @{
     Layout = "_Layout";
 }
-
-@* 'estendo' _Layout.cshtml, come in Django faccio {% extends 'base.html' %} *@
-
-
-@* 
-Per poter evitare di riperete anche:
-@{
-    Layout = "_Layout";
-}
-all'interno di ogni view che eredita da _Layout, creiamo questo file dove metteremo le istruzioni 
-comuni a tutte le view che ereditano. Il contenuto di questa pagina va in esecuzione
- ogni qualvolta che aprite una view di contenuto 
-*@

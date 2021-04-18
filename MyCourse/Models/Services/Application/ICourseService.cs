@@ -7,8 +7,6 @@ namespace MyCourse.Models.Services.Application
 {
     public interface ICourseService
     {
-        // non uso 'public' perchè omettendolo è implicito
-        // public List<CourseViewModel> getCourses(); = List<CourseViewModel> getCourses();
         Task<List<CourseViewModel>> getCoursesAsync();
         Task<CourseDetailViewModel> getCourseDetailAsync(int id);
     }

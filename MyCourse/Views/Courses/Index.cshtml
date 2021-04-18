@@ -1,20 +1,7 @@
-@* @{
-    Layout = "_Layout";
-} *@
-@* 'estendo' _Layout.cshtml, come in Django faccio {% extends 'base.html' %} *@
-
-@* @using System.Collections.Generic;
-@using MyCourse.Models.ViewModels;
-PER NON DOVER RIPETERE GLI IMPORT NELLE VIEWS, LI METTO TUTTI IN '_ViewImports.cshtml' *@
-
-@* rendo la View 'fortemente tipizzata', dichiara lei stessa quale è il tipo di dato che è in grado di presentare *@
 @model List<CourseViewModel> 
 
-@* Essendo la View 'fortemente tipizzata' ho delle agevolazioni. Posso infatti accedere all'oggetto passatomi dal controller
-    usando '@Model', in cui è presente l'oggetto *@
-
 <h1>Catalogo dei Corsi</h1>
-@foreach (CourseViewModel course in Model) //'course' è il valore del corso ad ogni ciclo; è di tipo 'CourseViewModel'
+@foreach (CourseViewModel course in Model)
 {
     <hr>
     <div class="row course">

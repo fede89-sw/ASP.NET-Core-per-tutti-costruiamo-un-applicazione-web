@@ -50,12 +50,15 @@
 	{
 	<hr>
 	<div class="row">
-		<div class="col-md-9 d-flex align-items-center">
-		    <a href="#">@lesson.Title</a>
-		</div>
-		<div class="col-md-3 d-flex align-items-center lesson-duration">
-			<i class="far fa-clock"></i><time>@lesson.Duration.ToString("m'm 's's'")</time>
-		</div>
+            <div class="col-md-9 d-flex align-items-center">
+                <a href="#">@lesson.Title</a>
+            </div>
+            <div class="col-md-3 d-flex align-items-center lesson-duration">
+                <i class="far fa-clock"></i><time>@lesson.Duration.ToString("m'm 's's'")</time>
+            </div>
+        <div class="col-md-12">
+            <p>@lesson.Description</p>
+        </div>
 	</div>
 	}
     <hr>

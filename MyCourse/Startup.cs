@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using MyCourse.Models.Services.Application;
 using MyCourse.Models.Services.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyCourse
 {
@@ -40,7 +41,16 @@ namespace MyCourse
             // services.AddScoped<MyCourseDbContext>();
             // Microsoft ha però creato una classe apposita per il Context, che è si scoped ma fa anche un servizio di logging, ovvero
             // ogni volta che andiamo a leggere i risultati di una query Linq viene loggata sul terminale la query SQL eseguita
-            services.AddDbContext<MyCourseDbContext>();
+            // services.AddDbContext<MyCourseDbContext>();
+            // ottimizzazione per precaricare istanze di MyCourseDbContext nel DbContext Pool;
+            // devi fornire una configurazione passando un DbContextOptionsBuilder e opzionalmente il numero
+            // di DbContext da precaricare (poolSize), che di default è 128
+            services.AddDbContextPool<MyCourseDbContext>(optionBuilder => {
+                // warning To protect potentially sensitive information in your connection string, 
+                // you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 
+                // for guidance on storing connection strings.
+                optionBuilder.UseSqlite("Data Source=Data/MyCourse.db");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,9 +5,13 @@ namespace MyCourse.Models.Services.Infrastructure
 {
     public partial class MyCourseDbContext : DbContext
     {
-        public MyCourseDbContext()
-        {
-        }
+        
+        // TOLGO IL COSTRUTTORE SENZA PARAMETRI QUANDO REGISTRO IL SERVIZIO IN ConfigureServices DI
+        // Startup.cs SE NO MI DA ERRORE; LASCIO IL COSTRUTTORE SOTTO CHE ACCETTA IL DbContextOptions
+        // CHE APPUNTO PASSO IN services.AddDbContextPool<T>.()
+        // public MyCourseDbContext()
+        // {
+        // }
 
         public MyCourseDbContext(DbContextOptions<MyCourseDbContext> options)
             : base(options)
@@ -18,16 +22,19 @@ namespace MyCourse.Models.Services.Infrastructure
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<Lesson> Lessons { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                // warning To protect potentially sensitive information in your connection string, 
-                // you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 
-                // for guidance on storing connection strings.
-                optionsBuilder.UseSqlite("Data Source=Data/MyCourse.db");
-            }
-        }
+        // TOLGO LA CONFIGURAZIONE DEL DbContext DA QUI PERCHE' L'HO INSERITA IN ConfigureServices
+        // IN Startup.cs quando ho aggiunto il servizio AddDbContextPool CHE RICHIEDE LA CONFIGURAZIONE
+        // DEL DBCONTEXT COME PARAMETRO
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     if (!optionsBuilder.IsConfigured)
+        //     {
+        //         // warning To protect potentially sensitive information in your connection string, 
+        //         // you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 
+        //         // for guidance on storing connection strings.
+        //         optionsBuilder.UseSqlite("Data Source=Data/MyCourse.db");
+        //     }
+        // }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

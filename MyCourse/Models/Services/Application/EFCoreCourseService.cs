@@ -22,6 +22,7 @@ namespace MyCourse.Models.Services.Application
         public async Task<CourseDetailViewModel> getCourseDetailAsync(int id)
         {
             CourseDetailViewModel courseDetail = await dbContext.Courses
+                .AsNoTracking()
                 .Where(course => course.Id == id)
                 .Select(course => new CourseDetailViewModel{
                     Id = course.Id,
@@ -54,15 +55,22 @@ namespace MyCourse.Models.Services.Application
             // i valori ottenuti dal dbContext
             // List<CourseViewModel> courses = dbContext.Courses;
 
-            List<CourseViewModel> courses = await dbContext.Courses.Select(course => new CourseViewModel{
-                Id = course.Id,
-                Title = course.Title,
-                ImagePath = course.ImagePath,
-                Author = course.Author,
-                Rating = course.Rating,
-                FullPrice = course.FullPrice,
-                CurrentPrice = course.CurrentPrice
-            }).ToListAsync(); // rendo il risultato di 'Select', che è IQueryable in una List
+            IQueryable<CourseViewModel> queriLinq = dbContext.Courses
+                .AsNoTracking()
+                .Select(course => new CourseViewModel{
+                    Id = course.Id,
+                    Title = course.Title,
+                    ImagePath = course.ImagePath,
+                    Author = course.Author,
+                    Rating = course.Rating,
+                    FullPrice = course.FullPrice,
+                    CurrentPrice = course.CurrentPrice
+                });
+            
+            // tenere separata la queryLinq dal momento effettivo in cui viene chiamata dall'app, ovvero all'uso del metodo
+            // ToListAsync, ci permetterà di poter filtrare i risultati in futuro magari per cercare un determinato corso con 
+            // un titolo fornito dall'utente, filtrando con l'extension Method .Where
+            List<CourseViewModel> courses = await queriLinq.ToListAsync(); // rendo il risultato di 'Select', che è IQueryable in una List
             return courses;
         }
     }

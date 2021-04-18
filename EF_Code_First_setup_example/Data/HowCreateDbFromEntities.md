@@ -5,6 +5,8 @@
     dotnet ef migrations add PrimaMigrazione
 - devi avere installato dotnet ef, puoi farlo con:
     dotnet tool install --global dotnet-ef
+- poi per creare effettivamente il database usa il comando:
+    dotnet ef database update
 - e per fare le migrazioni devi avere installato nel progetto il package NuGet:
     dotnet add package Microsoft.EntityFrameworkCore.Design
 - per aggiornare il database se fai modifiche alle Entità usa il comando:

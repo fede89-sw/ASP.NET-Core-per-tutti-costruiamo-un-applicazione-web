@@ -19,12 +19,8 @@ namespace MyCourse.Models.Services.Application
 
         public async Task<CourseDetailViewModel> getCourseDetailAsync(int id)
         {
-            // il simbolo '$' prima della stringa è come la f-string in python(uguali a come si fannoi in javascript);
-            // il simbolo '@' vuol dire che stiamo definendo una stringa su più righe; cioè una stringa composta da più righe diverse(come 2 istruzioni diverse)
             FormattableString query = $@"SELECT Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id};
                                          SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId={id}";
-            // la FormattableString è una stringa che permette di tenere separati la parte statica, di sola stringa e i paramentri
-            // che la compongono; query.Format da la parte statica, query.GetArgumets() ritorna i parametri;
 
             DataSet dataSet = await db.QueryAsync(query);
 

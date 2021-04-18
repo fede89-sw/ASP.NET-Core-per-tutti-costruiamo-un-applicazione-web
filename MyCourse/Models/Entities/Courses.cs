@@ -8,7 +8,6 @@ namespace MyCourse.Models.Entities
     {
         public Course(string title, string author)
         {
-            // validazione campi passati al costruttore
             if (string.IsNullOrWhiteSpace(title))
             {
                 throw new ArgumentException("The course must have a title");
@@ -17,14 +16,11 @@ namespace MyCourse.Models.Entities
             {
                 throw new ArgumentException("The course must have an author");
             }   
-            // voglio che per ogni istanza di Course siano inseriti title e author
             Title = title;
             Author = author;
             Lessons = new HashSet<Lesson>();
         }
 
-        // rendo privato il set dei dati, cosi che solo con un metodo apposito posso salvarci i dati,
-        // posso cosi inserire delle validazioni ai dati
         public int Id { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
@@ -38,7 +34,6 @@ namespace MyCourse.Models.Entities
 
         public void ChangeTitle(string newTitle)
         {
-            // validazione dati prima di cambiarli
             if (string.IsNullOrWhiteSpace(newTitle))
             {
                 throw new ArgumentException("The course must have a title");
@@ -64,8 +59,6 @@ namespace MyCourse.Models.Entities
             FullPrice = newFullPrice;
             CurrentPrice = newDiscountPrice;
         }
-
-        // rapporto di uno a molti tra il corso e le sue Lessons; il tipo è ICollection<T>
         public virtual ICollection<Lesson> Lessons { get; private set; }
     }
 }

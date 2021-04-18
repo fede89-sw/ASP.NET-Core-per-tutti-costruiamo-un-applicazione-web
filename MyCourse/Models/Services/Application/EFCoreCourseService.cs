@@ -9,12 +9,7 @@ namespace MyCourse.Models.Services.Application
 {
     public class EFCoreCourseService : ICourseService
     {
-        // rendo 'EFCoreCourseService' dipendente da MyCourseDbContext, in quanto ho bisogno di lui 
-        // per accedere poi al Database
         private readonly MyCourseDbContext dbContext;
-        // Dipendo dall'implementazione e non da un'interfaccia perchè farlo con il dbContext
-        // semplicemente è un casino. Quindi in questi casi va bene fare cosi, non tiriamoci matti
-        // per dover per forza inseguire un'idea
         public EFCoreCourseService(MyCourseDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -38,23 +33,14 @@ namespace MyCourse.Models.Services.Application
                             Title = lesson.Title,
                             Description = lesson.Description,
                             Duration = lesson.Duration
-                        }).ToList() // 'Lessons' di CourseDetailViewModel è List<LessonViewModel>, quindi devo fare il mapping e renderlo 
-                    })              // prima di tipo LessonViewModele poi una lista, perchè course.Lessons è ICollection<Lessons>
-                    // Select torna un IQueryable anche se vi è un solo elemento, quindi devo ottenere un singolo oggetto, e lo faccio con 1 dei metodi qui sotto:
-                    //.FirstOrDefaultAsync(); //Restituisce null se l'elenco è vuoto e non solleva mai un'eccezione
-                    //.SingleOrDefaultAsync(); //Tollera il fatto che l'elenco sia vuoto e in quel caso restituisce null, oppure se l'elenco contiene più di 1 elemento, solleva un'eccezione
-                    //.FirstAsync(); //Restituisce il primo elemento, ma se l'elenco è vuoto solleva un'eccezione
-                    .SingleAsync(); // Restituisce il primo elemento di un elenco, ma se l'elenco ne contiene 0 o più solleva un eccezione
+                        }).ToList() 
+                    })             
+                    .SingleAsync(); 
             return courseDetail;
         }
 
         public async Task<List<CourseViewModel>> getCoursesAsync()
         {
-            // dobbiamo ottenere delle istanze di 'CourseViewModel' a partire da enitità di tipo 'Course';
-            // Usiamo quindi 'Select' di Linq, creiamo un istanza di CourseViewModel in cui mappiamo 
-            // i valori ottenuti dal dbContext
-            // List<CourseViewModel> courses = dbContext.Courses;
-
             IQueryable<CourseViewModel> queriLinq = dbContext.Courses
                 .AsNoTracking()
                 .Select(course => new CourseViewModel{
@@ -66,11 +52,8 @@ namespace MyCourse.Models.Services.Application
                     FullPrice = course.FullPrice,
                     CurrentPrice = course.CurrentPrice
                 });
-            
-            // tenere separata la queryLinq dal momento effettivo in cui viene chiamata dall'app, ovvero all'uso del metodo
-            // ToListAsync, ci permetterà di poter filtrare i risultati in futuro magari per cercare un determinato corso con 
-            // un titolo fornito dall'utente, filtrando con l'extension Method .Where
-            List<CourseViewModel> courses = await queriLinq.ToListAsync(); // rendo il risultato di 'Select', che è IQueryable in una List
+
+            List<CourseViewModel> courses = await queriLinq.ToListAsync();
             return courses;
         }
     }

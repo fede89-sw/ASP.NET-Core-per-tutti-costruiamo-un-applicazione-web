@@ -25,12 +25,22 @@ namespace MyCourse
             // SetCompatibilityVersion è perchè ho aggiornato l'app a 2.2= dico ai 'services' di comportarsi secondo le tecniche introdotte nella versione 2.2
             // (dopo averla installata e aggiornata nella app, cambiando i riferimenti nei file che specificano la versione di dotnet)
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddTransient<ICourseService, AdoNetCourseService>(); 
+            
+            services.AddTransient<ICourseService, EFCoreCourseService>(); 
+            // services.AddTransient<ICourseService, AdoNetCourseService>(); 
             // diciamo ad ASP.NET Core che ogni volta che incontra un componente, come il nostro CourseController che ha una dipendenza 
             // dall'interfaccia ICourseService, in realtà construisci un CurseService(in qnt non può creare un istanza di ICourseService, non 
             // essendo una classe ma un'interfaccia); In qst modo abbiamo reso i componenti debolmente accoppiati, non dipendendo più direttamente
             //  da CourseService, che può essere sostituito cn qualsiasi classe che implementi i metodi definiti in ICourseService).
-            services.AddTransient<IDatabaseService, DatabaseService>(); 
+            
+            services.AddTransient<IDatabaseService, DatabaseService>();
+
+            // aggiungo il Context; Scoped perchè è oneroso da creare, (fa il mapping e contiene configurazione),
+            // quindi faccio si di avere al massimo una istanza per richiesta HTTP;
+            // services.AddScoped<MyCourseDbContext>();
+            // Microsoft ha però creato una classe apposita per il Context, che è si scoped ma fa anche un servizio di logging, ovvero
+            // ogni volta che andiamo a leggere i risultati di una query Linq viene loggata sul terminale la query SQL eseguita
+            services.AddDbContext<MyCourseDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

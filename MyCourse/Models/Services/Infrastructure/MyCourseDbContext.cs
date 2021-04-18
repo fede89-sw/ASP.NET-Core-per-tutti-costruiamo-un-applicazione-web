@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyCourse.Models.Entities;
 
-namespace MyCourse.Models.Entities
+namespace MyCourse.Models.Services.Infrastructure
 {
     public partial class MyCourseDbContext : DbContext
     {

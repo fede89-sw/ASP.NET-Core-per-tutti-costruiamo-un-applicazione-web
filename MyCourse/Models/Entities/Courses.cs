@@ -25,7 +25,7 @@ namespace MyCourse.Models.Entities
 
         // rendo privato il set dei dati, cosi che solo con un metodo apposito posso salvarci i dati,
         // posso cosi inserire delle validazioni ai dati
-        public long Id { get; private set; }
+        public int Id { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
         public string ImagePath { get; private set; }

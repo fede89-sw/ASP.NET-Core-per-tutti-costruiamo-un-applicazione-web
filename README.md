@@ -1,13 +1,10 @@
 # MyCourse
 In questo repository si trova il codice del progetto `MyCourse`, che viene presentato nel corso `ASP.NET Core per tutti` su Udemy.
 
-[https://www.udemy.com/aspnetcore-per-tutti/](https://www.udemy.com/aspnetcore-per-tutti/)
-
 ## Panoramica
-Il progetto è un'applicazione ASP.NET Core 2 dimostrativa per la pubblicazione e fruizione di corsi on-line. L'applicazione è pubblicata all'indirizzo:
-[https://my-course.azurewebsites.net](https://my-course.azurewebsites.net)
+Il progetto è un'applicazione ASP.NET Core 2 dimostrativa per la pubblicazione e fruizione di corsi on-line.
 
-![Screenshot dell'applicazione MyCourse](docs/images/my-course.png)
+![Screenshot dell'applicazione MyCourse](my-course.png)
 
 
 ## Ottenere il codice del progetto
@@ -19,7 +16,7 @@ Per chi non è abituato a usare GitHub, ecco spiegate le due opzioni per ottener
     ```
     a questo punto clonare il repository GIT digitando il comando:
     ```
-    git clone https://github.com/ItalyDotNet/MyCourse.git .
+    git clone https://github.com/fede89-sw/ASP.NET-Core-per-tutti-costruiamo-un-applicazione-web.git
     ```
  2. La seconda alternativa consiste semplicemente nello scaricare un file ZIP del progetto cliccando il bottone verde "Clone or download" che si trova in questa pagina e poi "Download ZIP".
     

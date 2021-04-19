@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
 
 namespace MyCourse.Models.Services.Infrastructure
 {
     public class DatabaseService : IDatabaseService
     {
+        private readonly  IConfiguration Configuration;
+
+        public DatabaseService(IConfiguration Configuration)
+        {
+            this.Configuration = Configuration;
+            
+        }
         public async Task<DataSet> QueryAsync(FormattableString formattableQuery)
         {
             var queryArguments = formattableQuery.GetArguments(); 
@@ -20,7 +28,8 @@ namespace MyCourse.Models.Services.Infrastructure
             }
             string query = formattableQuery.ToString();
 
-            using(var connection = new SqliteConnection("Data Source=Data/MyCourse.db"))
+            string connectionString = Configuration.GetConnectionString("Default");
+            using(var connection = new SqliteConnection(connectionString))
             { 
                 await connection.OpenAsync();
                 using(var command = new SqliteCommand(query, connection))

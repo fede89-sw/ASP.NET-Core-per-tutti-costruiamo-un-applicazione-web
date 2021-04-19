@@ -4,16 +4,27 @@ using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using MyCourse.Models.Options;
 
 namespace MyCourse.Models.Services.Infrastructure
 {
     public class DatabaseService : IDatabaseService
     {
-        private readonly  IConfiguration Configuration;
+        // IMPOSTIAMO LA CONNECTION STRNG con IConfiguration e senza creare un'altra classe 
+        // private readonly  IConfiguration Configuration;
 
-        public DatabaseService(IConfiguration Configuration)
+        // public DatabaseService(IConfiguration Configuration)
+        // {
+        //     this.Configuration = Configuration;            
+        // }
+
+        // IMPOSTIAMO LA CONNECTION STRNG CON LA CLASSE ConnectionStringOptions.cs in maniera fortemente tipizzata
+        public readonly IOptionsMonitor<ConnectionStringOptions> ConnectionStringOptions;
+
+        public DatabaseService(IOptionsMonitor<ConnectionStringOptions> ConnectionStringOptions)
         {
-            this.Configuration = Configuration;
+            this.ConnectionStringOptions = ConnectionStringOptions;
             
         }
         public async Task<DataSet> QueryAsync(FormattableString formattableQuery)
@@ -28,8 +39,11 @@ namespace MyCourse.Models.Services.Infrastructure
             }
             string query = formattableQuery.ToString();
 
-            string connectionString = Configuration.GetConnectionString("Default");
-            using(var connection = new SqliteConnection(connectionString))
+            // IMPOSTO CONNESSIONE CON IConfiguration 
+            // string connectionString = Configuration.GetConnectionString("Default");
+            // using(var connection = new SqliteConnection(connectionString))
+            // IMPOSTO CONNESSIONE USANDO CLASSE ConnectionStringOptions.cs
+            using(var connection = new SqliteConnection(ConnectionStringOptions.CurrentValue.Default))
             { 
                 await connection.OpenAsync();
                 using(var command = new SqliteCommand(query, connection))

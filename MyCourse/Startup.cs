@@ -23,8 +23,9 @@ namespace MyCourse
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);     
-            services.AddTransient<ICourseService, EFCoreCourseService>(); 
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddTransient<ICourseService, AdoNetCourseService>();  
+            // services.AddTransient<ICourseService, EFCoreCourseService>(); 
             services.AddTransient<IDatabaseService, DatabaseService>();
             services.AddDbContextPool<MyCourseDbContext>(optionBuilder => {
                 // abbiamo messo la connection string nel file 'appsettings.json' per maggiore sicurezza.

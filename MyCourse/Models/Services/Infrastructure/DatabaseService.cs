@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyCourse.Models.Options;
 
@@ -21,19 +22,23 @@ namespace MyCourse.Models.Services.Infrastructure
 
         // IMPOSTIAMO LA CONNECTION STRNG CON LA CLASSE ConnectionStringOptions.cs in maniera fortemente tipizzata
         public readonly IOptionsMonitor<ConnectionStringOptions> ConnectionStringOptions;
+        public readonly ILogger<DatabaseService> Logger;
 
-        public DatabaseService(IOptionsMonitor<ConnectionStringOptions> ConnectionStringOptions)
+        public DatabaseService(IOptionsMonitor<ConnectionStringOptions> ConnectionStringOptions, ILogger<DatabaseService> logger)
         {
+            this.Logger = logger;
             this.ConnectionStringOptions = ConnectionStringOptions;
-            
+
         }
         public async Task<DataSet> QueryAsync(FormattableString formattableQuery)
         {
-            var queryArguments = formattableQuery.GetArguments(); 
+            Logger.LogInformation(formattableQuery.Format, formattableQuery.GetArguments());
+
+            var queryArguments = formattableQuery.GetArguments();
             var sqliteParameters = new List<SqliteParameter>();
             for (var i = 0; i < queryArguments.Length; i++)
             {
-                var parameter = new SqliteParameter(i.ToString(), queryArguments[i]); 
+                var parameter = new SqliteParameter(i.ToString(), queryArguments[i]);
                 sqliteParameters.Add(parameter);
                 queryArguments[i] = "@" + i;
             }
@@ -43,16 +48,17 @@ namespace MyCourse.Models.Services.Infrastructure
             // string connectionString = Configuration.GetConnectionString("Default");
             // using(var connection = new SqliteConnection(connectionString))
             // IMPOSTO CONNESSIONE USANDO CLASSE ConnectionStringOptions.cs
-            using(var connection = new SqliteConnection(ConnectionStringOptions.CurrentValue.Default))
-            { 
+            string connectionString = ConnectionStringOptions.CurrentValue.Default;
+            using (var connection = new SqliteConnection(connectionString))
+            {
                 await connection.OpenAsync();
-                using(var command = new SqliteCommand(query, connection))
+                using (var command = new SqliteCommand(query, connection))
                 {
                     command.Parameters.AddRange(sqliteParameters);
-                    
-                    using(var results = await command.ExecuteReaderAsync())
+
+                    using (var results = await command.ExecuteReaderAsync())
                     {
-                        var dataSet = new DataSet(); 
+                        var dataSet = new DataSet();
                         dataSet.EnforceConstraints = false;
 
                         do
@@ -61,7 +67,7 @@ namespace MyCourse.Models.Services.Infrastructure
 
                             dataSet.Tables.Add(dataTable);
                             dataTable.Load(results);
-                        }while(!results.IsClosed);
+                        } while (!results.IsClosed);
 
                         return dataSet;
                     }

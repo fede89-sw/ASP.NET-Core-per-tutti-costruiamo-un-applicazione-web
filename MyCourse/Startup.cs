@@ -31,6 +31,8 @@ namespace MyCourse
 
             services.AddTransient<IDatabaseService, DatabaseService>();
 
+            services.AddTransient<ICachedCourseService, MemoryCacheCourseService>();
+
             services.AddDbContextPool<MyCourseDbContext>(optionBuilder => {
                 // abbiamo messo la connection string nel file 'appsettings.json' per maggiore sicurezza.
                 // in automatico ASP.NET Core sa che se è presente quel file deve andare li a cercarlo quando uno un oggetto IConfiguration
@@ -45,6 +47,9 @@ namespace MyCourse
 
             // registro anche la classe che contiene le opzioni per 'Courses', definite in appsettings.json nella sezione 'Courses' 
             services.Configure<CoursesOptions>(Configuration.GetSection("Courses"));
+
+            // opzioni per la durata degli oggetti in Cache
+            services.Configure<CachedLifeOptions>(Configuration.GetSection("CachedLife"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

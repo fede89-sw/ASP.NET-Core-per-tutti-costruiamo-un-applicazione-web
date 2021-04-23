@@ -24,9 +24,13 @@ namespace MyCourse
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // Usiamo AdoNet o EF per l'accesso ai dati?
             services.AddTransient<ICourseService, AdoNetCourseService>();  
             // services.AddTransient<ICourseService, EFCoreCourseService>(); 
+
             services.AddTransient<IDatabaseService, DatabaseService>();
+
             services.AddDbContextPool<MyCourseDbContext>(optionBuilder => {
                 // abbiamo messo la connection string nel file 'appsettings.json' per maggiore sicurezza.
                 // in automatico ASP.NET Core sa che se è presente quel file deve andare li a cercarlo quando uno un oggetto IConfiguration
@@ -35,17 +39,26 @@ namespace MyCourse
                 string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default"); // GetSection e GetValue<T> sono metodi di IConfiguration
                 optionBuilder.UseSqlite(connectionString);
             });
+
             // utilizzo la classe ConnectionStringOptions per avere la connectionString dal file appsettings.json in maniera fortemente tipizzata
             services.Configure<ConnectionStringOptions>(Configuration.GetSection("ConnectionStrings"));
+
             // registro anche la classe che contiene le opzioni per 'Courses', definite in appsettings.json nella sezione 'Courses' 
             services.Configure<CoursesOptions>(Configuration.GetSection("Courses"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+            }
+            else {
+                // se ambiente non Development, uso questo Middleware per mostrare gli errori dovuti ad Eccezioni;
+                // Con questo metodo l'indirizzo URL che ha generato un'eccezione viene rielaborata e provata una seconda volta,
+                // usando però come URL quello che abbiamo passato noi, /error; in qst modo invece di mostrare un errore di server o senza info
+                // verrà mostrata una pagina apposita e più User Friendly con info sull'errore.
+                // Andremo a creare nella cartella Views una sottocartella Error con Index.cs, gestita da un ErrorController
+                app.UseExceptionHandler("/Error");
             }
             app.UseStaticFiles();
             app.UseMvc( routeBuilder => {

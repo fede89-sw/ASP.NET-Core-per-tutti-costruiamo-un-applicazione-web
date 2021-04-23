@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MyCourse.Models.Exceptions;
 using MyCourse.Models.Options;
 using MyCourse.Models.Services.Infrastructure;
 using MyCourse.Models.ViewModels;
@@ -36,7 +37,13 @@ namespace MyCourse.Models.Services.Application
             var courseTable = dataSet.Tables[0];
             if (courseTable.Rows.Count != 1)
             {
-                throw new InvalidOperationException($"Did not return exactly 1 row for Course {id}");
+                // registro nel log l'eventualità di una ricerca in URL di un corso non esistente. Livello Warning
+                // Mi verrà inoltre registrata la classe di provenienza, avendo definito ILogger<AdoNetCourseService> logger,
+                // cosi da sapere in quale classe c'è stata l'eccezzione.
+                Logger.LogWarning("Course {id} not Found", id);
+
+                // throw new InvalidOperationException($"Did not return exactly 1 row for Course {id}");
+                throw new CourseNotFoundException(id);
             }
             var courseRow = courseTable.Rows[0];
             var courseDetailViewModel = CourseDetailViewModel.FromDataRow(courseRow);

@@ -24,7 +24,20 @@ namespace MyCourse
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc( options =>
+            {
+                // setto le opzioni per il ResponseCache dell'home controller, prendendole dal file appsettings.json
+                // e collegandone i valori come fatto nelle altre configurazione con IConfiguration
+                var homeProfile = new CacheProfile();
+
+                // homeProfile.Duration = Configuration.GetValue<int>("ResponseCache:Home:Duration");
+                // homeProfile.Location = Configuration.GetValue<ResponseCacheLocation>("ResponseCache:Home:Location");
+                // Visto che il nome Duration è lo stesso sia per homeProfile.Duration che ResponseCache:Home:Duration,
+                // posso fare le 2 righe sopra di codice in quella qui sotto con Bind.
+                Configuration.Bind("ResponseCache:Home", homeProfile);
+               
+                options.CacheProfiles.Add("Home", homeProfile);
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Usiamo AdoNet o EF per l'accesso ai dati?
             services.AddTransient<ICourseService, AdoNetCourseService>();  

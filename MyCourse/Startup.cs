@@ -65,10 +65,10 @@ namespace MyCourse
             // Se vogliamo usare Redis, ecco le istruzioni per installarlo: 
             // https://docs.microsoft.com/it-it/aspnet/core/performance/caching/distributed?view=aspnetcore-2.2#distributed-redis-cache
             // Bisogna anche installare il pacchetto NuGet: Microsoft.Extensions.Caching.StackExchangeRedis
-            services.AddStackExchangeRedisCache(options =>
-            {
-                Configuration.Bind("DistributedCache:Redis", options);
-            });
+            // services.AddStackExchangeRedisCache(options =>
+            // {
+            //     Configuration.Bind("DistributedCache:Redis", options);
+            // });
             
             // Se vogliamo usare Sql Server, ecco le istruzioni per preparare la tabella usata per la cache:
             // https://docs.microsoft.com/it-it/aspnet/core/performance/caching/distributed?view=aspnetcore-2.2#distributed-sql-server-cache

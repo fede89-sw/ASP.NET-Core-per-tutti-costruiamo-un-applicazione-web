@@ -7,6 +7,7 @@ using MyCourse.Models.Options;
 using MyCourse.Models.Services.Application;
 using MyCourse.Models.Services.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MyCourse
 {
@@ -50,6 +51,11 @@ namespace MyCourse
 
             // opzioni per la durata degli oggetti in Cache
             services.Configure<CachedLifeOptions>(Configuration.GetSection("CachedLife"));
+
+            // opzioni per l'uso massimo di memoria RAM tramite Cache; Il nome in GetSection lo decido io
+            // come al solito in base al nome messo nella configurazione(per es. in appsettings.json);
+            // MemoryCacheOptions è una classe già presente in ASP.NET Core, non è creata da me.
+            services.Configure<MemoryCacheOptions>(Configuration.GetSection("MemoryCache"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

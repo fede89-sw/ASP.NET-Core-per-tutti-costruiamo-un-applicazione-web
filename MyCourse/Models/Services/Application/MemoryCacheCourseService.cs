@@ -29,6 +29,10 @@ namespace MyCourse.Models.Services.Application
             // settando la durata dell'oggetto in Cache a 60 secondi
             return MemoryCache.GetOrCreateAsync($"Courses", cacheEntry =>
             {
+                // avendo impostato l'uso massimo di RAM in appsettings.json, devo specificare la dimensione
+                // degli oggetti che vi ci metto. Invece di usare Mb, visto che devo impostare io le dimensioni,
+                // uso le unità: su 1000 unità massime da mettere in RAM, la lista corsi conta per 1.
+                cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(CachedLifeOptions.CurrentValue.Duration)); // setto 60 sec di cache
                 return CourseService.getCoursesAsync(); // prendo dal DB i corsi se non sono già presenti in RAM
             });
@@ -41,6 +45,10 @@ namespace MyCourse.Models.Services.Application
             // settando la durata dell'oggetto in Cache a 60 secondi
             return MemoryCache.GetOrCreateAsync($"Course{id}", cacheEntry =>
             {
+                 // avendo impostato l'uso massimo di RAM in appsettings.json, devo specificare la dimensione
+                 // degli oggetti che vi ci metto. Invece di usare Mb, visto che devo impostare io le dimensioni,
+                 // uso le unità: su 1000 unità massime da mettere in RAM, il corso conta per 1.
+                cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(CachedLifeOptions.CurrentValue.Duration));
                 return CourseService.getCourseDetailAsync(id);
             });

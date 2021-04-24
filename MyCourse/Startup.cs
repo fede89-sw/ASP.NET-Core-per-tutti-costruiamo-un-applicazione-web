@@ -32,7 +32,10 @@ namespace MyCourse
 
             services.AddTransient<IDatabaseService, DatabaseService>();
 
-            services.AddTransient<ICachedCourseService, MemoryCacheCourseService>();
+            // uso IMemoryCache o IDistributedCache?
+            // services.AddTransient<ICachedCourseService, MemoryCacheCourseService>();
+            services.AddTransient<ICachedCourseService, DistributedCacheCourseService>();
+
 
             services.AddDbContextPool<MyCourseDbContext>(optionBuilder => {
                 // abbiamo messo la connection string nel file 'appsettings.json' per maggiore sicurezza.
@@ -56,6 +59,28 @@ namespace MyCourse
             // come al solito in base al nome messo nella configurazione(per es. in appsettings.json);
             // MemoryCacheOptions è una classe già presente in ASP.NET Core, non è creata da me.
             services.Configure<MemoryCacheOptions>(Configuration.GetSection("MemoryCache"));
+
+            #region Configurazione del servizio di cache distribuita
+
+            // Se vogliamo usare Redis, ecco le istruzioni per installarlo: 
+            // https://docs.microsoft.com/it-it/aspnet/core/performance/caching/distributed?view=aspnetcore-2.2#distributed-redis-cache
+            // Bisogna anche installare il pacchetto NuGet: Microsoft.Extensions.Caching.StackExchangeRedis
+            services.AddStackExchangeRedisCache(options =>
+            {
+                Configuration.Bind("DistributedCache:Redis", options);
+            });
+            
+            // Se vogliamo usare Sql Server, ecco le istruzioni per preparare la tabella usata per la cache:
+            // https://docs.microsoft.com/it-it/aspnet/core/performance/caching/distributed?view=aspnetcore-2.2#distributed-sql-server-cache
+            /*services.AddDistributedSqlServerCache(options => 
+            {
+                Configuration.Bind("DistributedCache:SqlServer", options);
+            });*/
+
+            //Se vogliamo usare la memoria, mentre siamo in sviluppo
+            //services.AddDistributedMemoryCache();
+            
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

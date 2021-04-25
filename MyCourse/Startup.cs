@@ -24,6 +24,8 @@ namespace MyCourse
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCaching();
+
             services.AddMvc( options =>
             {
                 // setto le opzioni per il ResponseCache dell'home controller, prendendole dal file appsettings.json
@@ -35,6 +37,12 @@ namespace MyCourse
                 // Visto che il nome Duration è lo stesso sia per homeProfile.Duration che ResponseCache:Home:Duration,
                 // posso fare le 2 righe sopra di codice in quella qui sotto con Bind.
                 Configuration.Bind("ResponseCache:Home", homeProfile);
+                
+                // Configurazione di ResponseCache per risolvere il problema del salvataggio in Cache da parte dell'app 
+                // di View paginate (se no per lui salvare la homepage o la homepage?page=2 non cambia)
+                // homeProfile.VaryByQueryKeys = new string[] { "page" };
+                // SETTO QUESTA CONFIGURAZIONE IN 'appsettings.json'
+
                
                 options.CacheProfiles.Add("Home", homeProfile);
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -84,7 +92,11 @@ namespace MyCourse
                 // Andremo a creare nella cartella Views una sottocartella Error con Index.cs, gestita da un ErrorController
                 app.UseExceptionHandler("/Error");
             }
+
             app.UseStaticFiles();
+
+            app.UseResponseCaching();
+
             app.UseMvc( routeBuilder => {
                 routeBuilder.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); 
             });

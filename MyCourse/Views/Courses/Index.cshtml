@@ -1,6 +1,21 @@
 @model List<CourseViewModel> 
 
-<h1>Catalogo dei Corsi</h1>
+<div class="row">
+    <div class="col-md-9">
+        <h1>Catalogo dei Corsi</h1>
+    </div>
+    <div class="col-md-3 d-flex align-items-center">
+        <form class="mr-auto" method="GET"> <!-- 'GET' per avere la ricerca nell'URL degli indirizzi -->
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="search" placeholder="Cerca..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-info" type="submit" id="button-addon2"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @foreach (CourseViewModel course in Model)
 {
     <hr>

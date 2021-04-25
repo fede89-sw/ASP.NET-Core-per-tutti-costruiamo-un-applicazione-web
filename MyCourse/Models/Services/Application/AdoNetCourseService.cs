@@ -52,9 +52,11 @@ namespace MyCourse.Models.Services.Application
             return courseDetailViewModel;
         }
 
-        public async Task<List<CourseViewModel>> getCoursesAsync()
+        public async Task<List<CourseViewModel>> getCoursesAsync(string search)
         {
-            FormattableString query = $"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses";
+            // se search è null, ovvero non viene cercato un titolo, torna tutti i corsi in quanto la query
+            // diventa un SELECT campi FROM courses dove il titolo contiene ""..condizione sempre vera
+            FormattableString query = $"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE title LIKE {'%' + search + '%'}";
             DataSet query_result = await db.QueryAsync(query);
 
             var dataTable = query_result.Tables[0];

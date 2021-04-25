@@ -39,9 +39,14 @@ namespace MyCourse.Models.Services.Application
             return courseDetail;
         }
 
-        public async Task<List<CourseViewModel>> getCoursesAsync()
+        public async Task<List<CourseViewModel>> getCoursesAsync(string search)
         {
+            // se il search a sinistra di ?? è null viene restituito cio che è a dx dei ??, se no viene restituito search stesso.
+            // Questo perchè se search è null, nel caso non venga fatta una ricerca per titolo, non mi torna neanche la lista di tutti i corsi,
+            // visto che uso lo stesso metodo
+            search = search ?? ""; // Null Coalescing Operator
             IQueryable<CourseViewModel> queriLinq = dbContext.Courses
+            .Where(course => course.Title.Contains(search))
                 .AsNoTracking()
                 .Select(course => new CourseViewModel{
                     Id = course.Id,

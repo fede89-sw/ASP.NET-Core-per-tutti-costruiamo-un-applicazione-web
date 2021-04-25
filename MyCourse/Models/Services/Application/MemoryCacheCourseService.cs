@@ -22,13 +22,15 @@ namespace MyCourse.Models.Services.Application
 
         }
 
-        public Task<List<CourseViewModel>> getCoursesAsync()
+        public Task<List<CourseViewModel>> getCoursesAsync(string search)
         {
-            return MemoryCache.GetOrCreateAsync($"Courses", cacheEntry =>
+            // imposto la chiave dinamica $"Courses{search}", altrimenti se faccio una ricerca
+            // mi ritorna cmq la lista dei corsi completa
+            return MemoryCache.GetOrCreateAsync($"Courses{search}", cacheEntry =>
             {
-                cacheEntry.SetSize(1);
+                // cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(CachedLifeOptions.CurrentValue.Duration));
-                return CourseService.getCoursesAsync();
+                return CourseService.getCoursesAsync(search);
             });
         }
 
@@ -36,7 +38,7 @@ namespace MyCourse.Models.Services.Application
         {
             return MemoryCache.GetOrCreateAsync($"Course{id}", cacheEntry =>
             {
-                cacheEntry.SetSize(1);
+                // cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(CachedLifeOptions.CurrentValue.Duration));
                 return CourseService.getCourseDetailAsync(id);
             });

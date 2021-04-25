@@ -12,15 +12,6 @@ namespace MyCourse.Models.Services.Infrastructure
 {
     public class DatabaseService : IDatabaseService
     {
-        // IMPOSTIAMO LA CONNECTION STRNG con IConfiguration e senza creare un'altra classe 
-        // private readonly  IConfiguration Configuration;
-
-        // public DatabaseService(IConfiguration Configuration)
-        // {
-        //     this.Configuration = Configuration;            
-        // }
-
-        // IMPOSTIAMO LA CONNECTION STRNG CON LA CLASSE ConnectionStringOptions.cs in maniera fortemente tipizzata
         public readonly IOptionsMonitor<ConnectionStringOptions> ConnectionStringOptions;
         public readonly ILogger<DatabaseService> Logger;
 
@@ -44,10 +35,6 @@ namespace MyCourse.Models.Services.Infrastructure
             }
             string query = formattableQuery.ToString();
 
-            // IMPOSTO CONNESSIONE CON IConfiguration 
-            // string connectionString = Configuration.GetConnectionString("Default");
-            // using(var connection = new SqliteConnection(connectionString))
-            // IMPOSTO CONNESSIONE USANDO CLASSE ConnectionStringOptions.cs
             string connectionString = ConnectionStringOptions.CurrentValue.Default;
             using (var connection = new SqliteConnection(connectionString))
             {

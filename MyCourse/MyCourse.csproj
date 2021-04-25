@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <!-- Tag per usare gli User Secrets -->
     <UserSecretsId>MyCourseUserSecrets</UserSecretsId>
   </PropertyGroup>
 

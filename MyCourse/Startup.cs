@@ -13,13 +13,10 @@ namespace MyCourse
 {
     public class Startup
     {
-        // l'istanza di Configration è solo lettura; ha infatti solo metodo 'get'
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration Configuration)
         {
-            // costruttore Startup con oggetto IConfiguration per usare il file 'appsettings.json'
-            // per impostare li la connection string
             this.Configuration = Configuration;   
         }
         public void ConfigureServices(IServiceCollection services)
@@ -42,7 +39,7 @@ namespace MyCourse
             services.AddTransient<ICachedCourseService, MemoryCacheCourseService>();
 
             services.AddDbContextPool<MyCourseDbContext>(optionBuilder => {
-                string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default"); // GetSection e GetValue<T> sono metodi di IConfiguration
+                string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
                 optionBuilder.UseSqlite(connectionString);
             });
 

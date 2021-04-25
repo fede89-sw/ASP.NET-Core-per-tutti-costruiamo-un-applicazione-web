@@ -27,8 +27,8 @@ namespace MyCourse.Models.Services.Application
             return MemoryCache.GetOrCreateAsync($"Courses", cacheEntry =>
             {
                 cacheEntry.SetSize(1);
-                cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(CachedLifeOptions.CurrentValue.Duration)); // setto 60 sec di cache
-                return CourseService.getCoursesAsync(); // prendo dal DB i corsi se non sono già presenti in RAM
+                cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(CachedLifeOptions.CurrentValue.Duration));
+                return CourseService.getCoursesAsync();
             });
         }
 

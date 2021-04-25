@@ -8,8 +8,8 @@ namespace MyCourse.Controllers
 {
     public class CoursesController : Controller 
     {
-        private readonly ICourseService courseService;
-        public CoursesController(ICourseService courseService) 
+        private readonly ICachedCourseService courseService;
+        public CoursesController(ICachedCourseService courseService) 
         {
             this.courseService = courseService;
 

@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ef.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,21 +14,6 @@ namespace EF_Code_First_setup_example
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            using(var client = new MyCourseContext())
-            {
-                // creo database all'avvio dell'app se questo non esiste;
-                // se esiste non esegue nulla.
-                client.Database.EnsureCreated();
-            }
-            using (var ctx = new MyCourseContext())
-            {
-                // setto dei valori che verranno messi nel Database nella taballe 'Courses'
-                var course = new Courses() { Id = 1, Title = "Prova1",
-                                           Description="random Description", Author = "Mario Rossi" };
-        
-                ctx.Courses.Add(course);
-                ctx.SaveChanges();                
-            }
         }
 
         public IConfiguration Configuration { get; }
@@ -41,8 +22,18 @@ namespace EF_Code_First_setup_example
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            // aggiungo i servizi di SQLite forniti da EF
-            services.AddEntityFrameworkSqlite().AddDbContext<MyCourseContext>();
+            
+            // passo le opzioni del DbContext direttamente qui sotto; cosi facendo devo avere 
+            // in MyCourseContext il costruttore che prende DbContextOptions come parametro.
+            services.AddDbContext<MyCourseContext>(optionsBuilder => {
+                // setto la 'connection string' per il database
+                optionsBuilder.UseSqlite("Filename=Data/EF_CF_example.db");
+            });
+
+            // Se le opzioni del DbContext le imposto nel metodo 'OnConfiguring' di MyCourseContext
+            // posso commentare AddDbContext qua sopra e usare quello sotto, togliendo anche il 
+            // costruttore di MyCourseContext che accetta DbContextOptions come parametro
+            // services.AddDbContext<MyCourseContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

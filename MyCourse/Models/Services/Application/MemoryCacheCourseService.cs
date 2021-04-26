@@ -22,15 +22,18 @@ namespace MyCourse.Models.Services.Application
 
         }
 
-        public Task<List<CourseViewModel>> getCoursesAsync(string search)
+        public Task<List<CourseViewModel>> getCoursesAsync(string search, int page)
         {
             // imposto la chiave dinamica $"Courses{search}", altrimenti se faccio una ricerca
             // mi ritorna cmq la lista dei corsi completa
-            return MemoryCache.GetOrCreateAsync($"Courses{search}", cacheEntry =>
+            // UPDATE: per lo stesso motivo sopra, aggiungo anche -{page} avendo messo la paginazione.
+            // E' importante modificare la chiave Cache in base od ogni paramentro che mi fa generare la 
+            // lista dei corsi all'interno del catalogo, altrimenti per la cache sono tutte la stessa pagina.
+            return MemoryCache.GetOrCreateAsync($"Courses{search}-{page}", cacheEntry =>
             {
                 // cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(CachedLifeOptions.CurrentValue.Duration));
-                return CourseService.getCoursesAsync(search);
+                return CourseService.getCoursesAsync(search, page);
             });
         }
 

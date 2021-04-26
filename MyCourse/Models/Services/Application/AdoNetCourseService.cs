@@ -52,11 +52,14 @@ namespace MyCourse.Models.Services.Application
             return courseDetailViewModel;
         }
 
-        public async Task<List<CourseViewModel>> getCoursesAsync(string search)
+        public async Task<List<CourseViewModel>> getCoursesAsync(string search, int page)
         {
+            page = Math.Max(1, page); // controllo nel caso l'utente smanetti e scriva pagina 0 o negativa. Cosi invece il minimo valore è 1, o la pagina passate se questa è > 1
+            int limit = CoursesOptions.CurrentValue.PerPage; // numero di oggetti dal database da recuperare(paginazione). Prendo il valore dai settings.json
+            int offset = (page - 1) * limit; // numero di oggetti da non recuperare prima di prendere i 10 oggetti (se sei a pagina 3, i primi 20 corsi non li vuoi)
             // se search è null, ovvero non viene cercato un titolo, torna tutti i corsi in quanto la query
             // diventa un SELECT campi FROM courses dove il titolo contiene ""..condizione sempre vera
-            FormattableString query = $"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE title LIKE {'%' + search + '%'}";
+            FormattableString query = $"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE title LIKE {'%' + search + '%'} LIMIT {limit} OFFSET {offset}";
             DataSet query_result = await db.QueryAsync(query);
 
             var dataTable = query_result.Tables[0];

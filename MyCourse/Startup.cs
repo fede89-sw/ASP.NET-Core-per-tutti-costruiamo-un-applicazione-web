@@ -39,7 +39,8 @@ namespace MyCourse
                 Configuration.Bind("ResponseCache:Home", homeProfile);
                 
                 // Configurazione di ResponseCache per risolvere il problema del salvataggio in Cache da parte dell'app 
-                // di View paginate (se no per lui salvare la homepage o la homepage?page=2 non cambia)
+                // di View paginate (se no per lui salvare la homepage o la homepage?page=2 non cambia), in quanto nel creare
+                // la chiave Cache non tiene conto dei query params; diciamogli di farci attenzione (al params 'page') come fatto qui sotto
                 // homeProfile.VaryByQueryKeys = new string[] { "page" };
                 // SETTO QUESTA CONFIGURAZIONE IN 'appsettings.json'
 

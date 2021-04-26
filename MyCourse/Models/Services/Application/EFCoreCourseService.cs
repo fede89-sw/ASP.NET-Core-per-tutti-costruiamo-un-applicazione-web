@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MyCourse.Models.Entities;
 using MyCourse.Models.Options;
 using MyCourse.Models.Services.Infrastructure;
 using MyCourse.Models.ViewModels;
@@ -46,7 +47,7 @@ namespace MyCourse.Models.Services.Application
             return courseDetail;
         }
 
-        public async Task<List<CourseViewModel>> getCoursesAsync(string search, int page)
+        public async Task<List<CourseViewModel>> getCoursesAsync(string search, int page, string orderby, bool ascending)
         {
             page = Math.Max(1, page); // controllo nel caso l'utente smanetti e scriva pagina 0 o negativa. Cosi invece il minimo valore è 1, o la pagina passate se questa è > 1
             int limit = CoursesOptions.CurrentValue.PerPage; // numero di oggetti dal database da recuperare(paginazione). Prendo il valore dai settings.json
@@ -56,7 +57,53 @@ namespace MyCourse.Models.Services.Application
             // Questo perchè se search è null, nel caso non venga fatta una ricerca per titolo, non mi torna neanche la lista di tutti i corsi,
             // visto che uso lo stesso metodo
             search = search ?? ""; // Null Coalescing Operator
-            IQueryable<CourseViewModel> queriLinq = dbContext.Courses
+
+            // sanitizzo i dati di ordinamento in modo che sia uno di quello consentiti in appsettings.json
+            var orderOptions = CoursesOptions.CurrentValue.Order;
+            if(!orderOptions.Allow.Contains(orderby))
+            {
+                orderby = orderOptions.By;
+                ascending = orderOptions.Ascending;
+            }
+
+            IQueryable<Course> baseQuery = dbContext.Courses;
+            // uso l'extension method appropriato in base alla richiesta di ordinamento dell'utente
+            switch(orderby)
+            {
+                case "Title":
+                    if (ascending)
+                    {
+                        baseQuery = baseQuery.OrderBy(course => course.Title);
+                    }
+                    else
+                    {
+                        baseQuery = baseQuery.OrderByDescending(course => course.Title);
+                    }
+                    break;
+                case "Rating":
+                    if (ascending)
+                    {
+                        baseQuery = baseQuery.OrderBy(course => course.Rating);
+                    }
+                    else
+                    {
+                        baseQuery = baseQuery.OrderByDescending(course => course.Rating);
+                    }
+                    break;
+                case "CurrentPrice":
+                    if (ascending)
+                    {
+                        baseQuery = baseQuery.OrderBy(course => course.CurrentPrice.Amount);
+                    }
+                    else
+                    {
+                        baseQuery = baseQuery.OrderByDescending(course => course.CurrentPrice.Amount);
+                    }
+                    break;
+            }
+
+            // prendo dal database usando la baseQuery con l'ordinamento scelto
+            IQueryable<CourseViewModel> queriLinq = baseQuery
                 .Where(course => course.Title.Contains(search))
                 .Skip(offset)
                 .Take(limit)

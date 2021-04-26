@@ -31,8 +31,8 @@ namespace MyCourse
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Usiamo AdoNet o EF per l'accesso ai dati?
-            // services.AddTransient<ICourseService, AdoNetCourseService>();  
-            services.AddTransient<ICourseService, EFCoreCourseService>(); 
+            services.AddTransient<ICourseService, AdoNetCourseService>();  
+            // services.AddTransient<ICourseService, EFCoreCourseService>(); 
 
             services.AddTransient<IDatabaseService, DatabaseService>();
 

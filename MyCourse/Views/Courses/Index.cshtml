@@ -16,6 +16,15 @@
     </div>
 </div>
 
+@* Ordinamento dei Corsi *@
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5"><a asp-route-orderby="Title" asp-route-ascending="true">Titolo</a></div>
+    <div class="col-md-2"><a asp-route-orderby="Rating" asp-route-ascending="true">Valutazione</a></div>
+    <div class="col-md-2"><a asp-route-orderby="CurrentPrice" asp-route-ascending="true">Prezzo</a></div>
+    <div class="col-md-2"></div>
+</div>
+
 @foreach (CourseViewModel course in Model)
 {
     <hr>
@@ -55,6 +64,7 @@
     </div>
 }
 
+@* Paginazione dei Corsi *@
 <nav aria-label="Page navigation">
   <ul class="pagination d-flex justify-content-center mt-3">
     @* <li class="page-item"><a class="page-link" href="#">Previous</a></li> *@

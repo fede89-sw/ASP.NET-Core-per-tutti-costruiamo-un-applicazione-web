@@ -106,8 +106,6 @@ namespace MyCourse.Models.Services.Application
             // prendo dal database usando la baseQuery con l'ordinamento scelto
             IQueryable<CourseViewModel> queriLinq = baseQuery
                 .Where(course => course.Title.Contains(model.Search))
-                .Skip(model.Offset)
-                .Take(model.Limit)
                 .AsNoTracking()
                 .Select(course => new CourseViewModel
                 {
@@ -120,7 +118,11 @@ namespace MyCourse.Models.Services.Application
                     CurrentPrice = course.CurrentPrice
                 });
 
-            List<CourseViewModel> courses = await queriLinq.ToListAsync();
+            List<CourseViewModel> courses = await queriLinq
+                .Skip(model.Offset)
+                .Take(model.Limit)
+                .ToListAsync();
+            
             return courses;
         }
     }

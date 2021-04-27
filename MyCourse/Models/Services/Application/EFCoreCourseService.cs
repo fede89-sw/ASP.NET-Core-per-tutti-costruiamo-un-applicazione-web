@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MyCourse.Models.Entities;
+using MyCourse.Models.InputModels;
 using MyCourse.Models.Options;
 using MyCourse.Models.Services.Infrastructure;
 using MyCourse.Models.ViewModels;
@@ -47,31 +48,31 @@ namespace MyCourse.Models.Services.Application
             return courseDetail;
         }
 
-        public async Task<List<CourseViewModel>> getCoursesAsync(string search, int page, string orderby, bool ascending)
+        public async Task<List<CourseViewModel>> getCoursesAsync(CourseListInputModel model)
         {
-            page = Math.Max(1, page); // controllo nel caso l'utente smanetti e scriva pagina 0 o negativa. Cosi invece il minimo valore è 1, o la pagina passate se questa è > 1
-            int limit = CoursesOptions.CurrentValue.PerPage; // numero di oggetti dal database da recuperare(paginazione). Prendo il valore dai settings.json
-            int offset = (page - 1) * limit; // numero di oggetti da non recuperare prima di prendere i 10 oggetti (se sei a pagina 3, i primi 20 corsi non li vuoi)
+            // page = Math.Max(1, page); // controllo nel caso l'utente smanetti e scriva pagina 0 o negativa. Cosi invece il minimo valore è 1, o la pagina passate se questa è > 1
+            // int limit = CoursesOptions.CurrentValue.PerPage; // numero di oggetti dal database da recuperare(paginazione). Prendo il valore dai settings.json
+            // int offset = (page - 1) * limit; // numero di oggetti da non recuperare prima di prendere i 10 oggetti (se sei a pagina 3, i primi 20 corsi non li vuoi)
 
             // se il search a sinistra di ?? è null viene restituito cio che è a dx dei ??, se no viene restituito search stesso.
             // Questo perchè se search è null, nel caso non venga fatta una ricerca per titolo, non mi torna neanche la lista di tutti i corsi,
             // visto che uso lo stesso metodo
-            search = search ?? ""; // Null Coalescing Operator
+            // search = search ?? ""; // Null Coalescing Operator
 
             // sanitizzo i dati di ordinamento in modo che sia uno di quello consentiti in appsettings.json
-            var orderOptions = CoursesOptions.CurrentValue.Order;
-            if(!orderOptions.Allow.Contains(orderby))
-            {
-                orderby = orderOptions.By;
-                ascending = orderOptions.Ascending;
-            }
+            // var orderOptions = CoursesOptions.CurrentValue.Order;
+            // if(!orderOptions.Allow.Contains(orderby))
+            // {
+            //     orderby = orderOptions.By;
+            //     ascending = orderOptions.Ascending;
+            // }
 
             IQueryable<Course> baseQuery = dbContext.Courses;
             // uso l'extension method appropriato in base alla richiesta di ordinamento dell'utente
-            switch(orderby)
+            switch(model.OrderBy)
             {
                 case "Title":
-                    if (ascending)
+                    if (model.Ascending)
                     {
                         baseQuery = baseQuery.OrderBy(course => course.Title);
                     }
@@ -81,7 +82,7 @@ namespace MyCourse.Models.Services.Application
                     }
                     break;
                 case "Rating":
-                    if (ascending)
+                    if (model.Ascending)
                     {
                         baseQuery = baseQuery.OrderBy(course => course.Rating);
                     }
@@ -91,7 +92,7 @@ namespace MyCourse.Models.Services.Application
                     }
                     break;
                 case "CurrentPrice":
-                    if (ascending)
+                    if (model.Ascending)
                     {
                         baseQuery = baseQuery.OrderBy(course => course.CurrentPrice.Amount);
                     }
@@ -104,9 +105,9 @@ namespace MyCourse.Models.Services.Application
 
             // prendo dal database usando la baseQuery con l'ordinamento scelto
             IQueryable<CourseViewModel> queriLinq = baseQuery
-                .Where(course => course.Title.Contains(search))
-                .Skip(offset)
-                .Take(limit)
+                .Where(course => course.Title.Contains(model.Search))
+                .Skip(model.Offset)
+                .Take(model.Limit)
                 .AsNoTracking()
                 .Select(course => new CourseViewModel
                 {

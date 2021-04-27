@@ -23,13 +23,13 @@ namespace MyCourse.Models.InputModels
                 ascending = orderOptions.Ascending;
             }
 
-            this.Ascending = ascending;
-            this.OrderBy = orderby;
-            this.Search = search ?? "";
-            this.Page = Math.Max(1, Page);
+            Ascending = ascending;
+            OrderBy = orderby;
+            Search = search ?? "";
+            Page = Math.Max(1, Page);
 
-            this.Limit = coursesOptions.PerPage;
-            this.Offset = (this.Page - 1) * this.Limit;
+            Limit = coursesOptions.PerPage;
+            Offset = (Page - 1) * Limit;
         }
 
         // imposto solo 'get' perchè non voglio che dall'esterno i valori che sono stati sanitizzati

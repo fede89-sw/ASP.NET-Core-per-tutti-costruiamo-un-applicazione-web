@@ -15,9 +15,9 @@ namespace MyCourse.Controllers
             this.courseService = courseService;
 
         }
-        public async Task<IActionResult> Index(CourseListInputModel input)
+        public async Task<IActionResult> Index(CourseListInputModel model)
         {
-            List<CourseViewModel> courses_list = await courseService.getCoursesAsync(input);
+            List<CourseViewModel> courses_list = await courseService.getCoursesAsync(model);
             ViewData["Title"] = "MyCourse - Catalogo dei Corsi";
             return View(courses_list);
         }

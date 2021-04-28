@@ -17,7 +17,7 @@ namespace MyCourse.Controllers
         }
         public async Task<IActionResult> Index(CourseListInputModel model)
         {
-            List<CourseViewModel> courses_list = await courseService.getCoursesAsync(model);
+            ListViewModel<CourseViewModel> courses_list = await courseService.getCoursesAsync(model);
             ViewData["Title"] = "MyCourse - Catalogo dei Corsi";
             
             // metto la lista dei corsi e le variabili passate dall'utente presenti in 'model'

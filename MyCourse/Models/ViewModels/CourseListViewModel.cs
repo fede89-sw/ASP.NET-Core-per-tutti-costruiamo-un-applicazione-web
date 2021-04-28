@@ -8,7 +8,7 @@ namespace MyCourse.Models.ViewModels
     // per mantenere la preferenza di ordinamento 
     public class CourseListViewModel
     {
-        public List<CourseViewModel> Courses { get; set; }
+        public ListViewModel<CourseViewModel> Courses { get; set; }
         public CourseListInputModel Input { get; set; }
     }
 }

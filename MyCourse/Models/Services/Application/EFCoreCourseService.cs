@@ -48,7 +48,7 @@ namespace MyCourse.Models.Services.Application
             return courseDetail;
         }
 
-        public async Task<List<CourseViewModel>> getCoursesAsync(CourseListInputModel model)
+        public async Task<ListViewModel<CourseViewModel>> getCoursesAsync(CourseListInputModel model)
         {
             // page = Math.Max(1, page); // controllo nel caso l'utente smanetti e scriva pagina 0 o negativa. Cosi invece il minimo valore è 1, o la pagina passate se questa è > 1
             // int limit = CoursesOptions.CurrentValue.PerPage; // numero di oggetti dal database da recuperare(paginazione). Prendo il valore dai settings.json
@@ -118,12 +118,22 @@ namespace MyCourse.Models.Services.Application
                     CurrentPrice = course.CurrentPrice
                 });
 
+            // separo skip e take dalla query Linq sopra perchè quando poi rieseguo la query per avere
+            // il totale dei corsi, non devono essere paginati se no non riesco nel mio intento.
             List<CourseViewModel> courses = await queriLinq
                 .Skip(model.Offset)
                 .Take(model.Limit)
                 .ToListAsync();
+                
+            // faccio un'altra chiamata al database per avere il conteggio totale dei corsi(senza Skip e Take)
+            int totalCount = await queriLinq.CountAsync();
             
-            return courses;
+            ListViewModel<CourseViewModel> result = new ListViewModel<CourseViewModel>{
+                Results = courses,
+                TotalCount = totalCount
+            };
+            
+            return result;
         }
     }
 }

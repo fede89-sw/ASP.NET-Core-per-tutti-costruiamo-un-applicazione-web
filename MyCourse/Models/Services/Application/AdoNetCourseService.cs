@@ -55,7 +55,7 @@ namespace MyCourse.Models.Services.Application
             return courseDetailViewModel;
         }
 
-        public async Task<List<CourseViewModel>> getCoursesAsync(CourseListInputModel model)
+        public async Task<ListViewModel<CourseViewModel>> getCoursesAsync(CourseListInputModel model)
         {
             // page = Math.Max(1, page); // controllo nel caso l'utente smanetti e scriva pagina 0 o negativa. Cosi invece il minimo valore è 1, o la pagina passate se questa è > 1
             // int limit = CoursesOptions.CurrentValue.PerPage; // numero di oggetti dal database da recuperare(paginazione). Prendo il valore dai settings.json
@@ -74,7 +74,9 @@ namespace MyCourse.Models.Services.Application
 
             // se search è null, ovvero non viene cercato un titolo, torna tutti i corsi in quanto la query
             // diventa un SELECT campi FROM courses dove il titolo contiene ""..condizione sempre vera
-            FormattableString query = $"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE title LIKE {'%' + model.Search + '%'} ORDER BY {(Sql) orderby} {(Sql) direction} LIMIT {model.Limit} OFFSET {model.Offset}";
+            FormattableString query = $@"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE title LIKE {'%' + model.Search + '%'} ORDER BY {(Sql) orderby} {(Sql) direction} LIMIT {model.Limit} OFFSET {model.Offset};
+            SELECT COUNT(*) FROM Courses WHERE title LIKE {'%' + model.Search + '%'}";
+            
             DataSet query_result = await db.QueryAsync(query);
 
             var dataTable = query_result.Tables[0];
@@ -85,7 +87,12 @@ namespace MyCourse.Models.Services.Application
                 CourseViewModel course = CourseViewModel.FromDataRow(courseRow);
                 courseList.Add(course);
             }
-            return courseList;
+
+            ListViewModel<CourseViewModel> result = new ListViewModel<CourseViewModel>{
+                Results = courseList,
+                TotalCount = Convert.ToInt32(query_result.Tables[1].Rows[0][0]) // prendo il conteggio dei corsi totali fatto con la seconda Query Sql inviata
+            };
+            return result;
         }
     }
 }

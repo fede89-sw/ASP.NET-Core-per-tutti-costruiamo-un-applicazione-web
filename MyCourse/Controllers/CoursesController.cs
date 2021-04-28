@@ -19,7 +19,15 @@ namespace MyCourse.Controllers
         {
             List<CourseViewModel> courses_list = await courseService.getCoursesAsync(model);
             ViewData["Title"] = "MyCourse - Catalogo dei Corsi";
-            return View(courses_list);
+            
+            // metto la lista dei corsi e le variabili passate dall'utente presenti in 'model'
+            // nella classe 'CourseListViewModel', in modo da passare tutto alla View
+            CourseListViewModel viewModel = new CourseListViewModel{
+                Courses = courses_list,
+                Input = model
+            };
+            
+            return View(viewModel);
         }
         public async Task<IActionResult> Detail(int id)
         {

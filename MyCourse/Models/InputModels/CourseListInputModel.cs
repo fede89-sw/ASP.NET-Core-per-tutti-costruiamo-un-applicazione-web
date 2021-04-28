@@ -23,10 +23,10 @@ namespace MyCourse.Models.InputModels
                 ascending = orderOptions.Ascending;
             }
 
-            Ascending = ascending;
-            OrderBy = orderby;
             Search = search ?? "";
-            Page = Math.Max(1, Page);
+            Page = Math.Max(1, page);
+            OrderBy = orderby;
+            Ascending = ascending;
 
             Limit = coursesOptions.PerPage;
             Offset = (Page - 1) * Limit;

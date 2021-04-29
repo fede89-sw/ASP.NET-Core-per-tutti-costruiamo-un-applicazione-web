@@ -13,7 +13,7 @@ namespace MyCourse.Models.InputModels
     [ModelBinder(BinderType = typeof(CourseListInputModelBinder))]
     public class CourseListInputModel
     {
-        public CourseListInputModel(string search, int page, string orderby, bool ascending, CoursesOptions coursesOptions)
+        public CourseListInputModel(string search, int page, string orderby, bool ascending, int limit, CoursesOptions coursesOptions)
         {            
             // sanitizzo i dati di ordinamento in modo che sia uno di quello consentiti in appsettings.json
             var orderOptions = coursesOptions.Order;
@@ -25,6 +25,7 @@ namespace MyCourse.Models.InputModels
 
             Search = search ?? "";
             Page = Math.Max(1, page);
+            Limit = Math.Max(1, limit);
             OrderBy = orderby;
             Ascending = ascending;
 

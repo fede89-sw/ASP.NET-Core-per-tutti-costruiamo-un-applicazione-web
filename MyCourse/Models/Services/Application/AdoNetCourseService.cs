@@ -94,5 +94,33 @@ namespace MyCourse.Models.Services.Application
             };
             return result;
         }
+
+        public async Task<List<CourseViewModel>> getBestRatingCoursesAsync()
+        {
+            CourseListInputModel inputModel = new CourseListInputModel(
+                search: "",
+                page: 1,
+                orderby: "Rating",
+                ascending: false,
+                limit: CoursesOptions.CurrentValue.inHome,
+                coursesOptions: CoursesOptions.CurrentValue);
+
+                ListViewModel<CourseViewModel> result = await getCoursesAsync(inputModel);
+                return result.Results;
+        }
+        
+        public async Task<List<CourseViewModel>> getLatestCourses()
+        {
+            CourseListInputModel inputModel = new CourseListInputModel(
+                search: "",
+                page: 1,
+                orderby: "Id",
+                ascending: false,
+                limit: CoursesOptions.CurrentValue.inHome,
+                coursesOptions: CoursesOptions.CurrentValue);
+
+                ListViewModel<CourseViewModel> result = await getCoursesAsync(inputModel);
+                return result.Results;
+        }
     }
 }

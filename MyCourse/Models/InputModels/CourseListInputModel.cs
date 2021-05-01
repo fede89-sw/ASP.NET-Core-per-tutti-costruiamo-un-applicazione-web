@@ -29,7 +29,6 @@ namespace MyCourse.Models.InputModels
             OrderBy = orderby;
             Ascending = ascending;
 
-            Limit = coursesOptions.PerPage;
             Offset = (Page - 1) * Limit;
         }
 

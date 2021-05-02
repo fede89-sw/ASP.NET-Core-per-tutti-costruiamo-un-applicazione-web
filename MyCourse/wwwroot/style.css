@@ -69,3 +69,13 @@ h2 {
     font-weight: bold;
 
 }
+
+.jumbotron {
+    background-image: url('/img/hero.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.jumbotron h1 {
+    font-size: 3.5rem;
+}

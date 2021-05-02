@@ -101,6 +101,16 @@ namespace MyCourse.Models.Services.Application
                         baseQuery = baseQuery.OrderByDescending(course => course.CurrentPrice.Amount);
                     }
                     break;
+                case "Id":
+                    if (model.Ascending)
+                    {
+                        baseQuery = baseQuery.OrderBy(course => course.Id);
+                    }
+                    else
+                    {
+                        baseQuery = baseQuery.OrderByDescending(course => course.Id);
+                    }
+                    break;
             }
 
             // prendo dal database usando la baseQuery con l'ordinamento scelto

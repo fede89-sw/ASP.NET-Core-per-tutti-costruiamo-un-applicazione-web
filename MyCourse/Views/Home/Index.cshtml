@@ -1,5 +1,11 @@
 @model HomeViewModel
-<h1>Sono la View per l'Action Detail del HomeController</h1>
+
+<div class="jumbotron my-5">
+  <h1 class="display-4">@ViewData["Title"]</h1>
+  <p class="lead">Impara in maniera facile e divertente con i nostri corsi online<br>Scegli da un vasto catalogo sempre a tua disposizione</p>
+  <hr class="my-4">
+  <p><a class="btn btn-primary btn-lg" asp-controller="Courses" asp-asp-action="Index">Sfoglia il Catalogo</a></p>
+</div>
 
 @* Best Rating Courses *@
 <h2>I migliori di sempre</h2>

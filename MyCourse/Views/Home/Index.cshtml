@@ -7,7 +7,6 @@
   <p><a class="btn btn-primary btn-lg" asp-controller="Courses" asp-asp-action="Index">Sfoglia il Catalogo</a></p>
 </div>
 
-@* Best Rating Courses *@
 <h2>I migliori di sempre</h2>
 @foreach (var course in Model.BestRatingCourses)
 {
@@ -50,7 +49,6 @@
 
 <br><br>
 
-@* Latest Courses *@
 <h2>Aggiunti di recente</h2>
 @foreach (var course in Model.LatestCourses)
 {

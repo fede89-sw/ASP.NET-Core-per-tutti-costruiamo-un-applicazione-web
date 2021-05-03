@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,25 +49,7 @@ namespace MyCourse.Models.Services.Application
 
         public async Task<ListViewModel<CourseViewModel>> getCoursesAsync(CourseListInputModel model)
         {
-            // page = Math.Max(1, page); // controllo nel caso l'utente smanetti e scriva pagina 0 o negativa. Cosi invece il minimo valore è 1, o la pagina passate se questa è > 1
-            // int limit = CoursesOptions.CurrentValue.PerPage; // numero di oggetti dal database da recuperare(paginazione). Prendo il valore dai settings.json
-            // int offset = (page - 1) * limit; // numero di oggetti da non recuperare prima di prendere i 10 oggetti (se sei a pagina 3, i primi 20 corsi non li vuoi)
-
-            // se il search a sinistra di ?? è null viene restituito cio che è a dx dei ??, se no viene restituito search stesso.
-            // Questo perchè se search è null, nel caso non venga fatta una ricerca per titolo, non mi torna neanche la lista di tutti i corsi,
-            // visto che uso lo stesso metodo
-            // search = search ?? ""; // Null Coalescing Operator
-
-            // sanitizzo i dati di ordinamento in modo che sia uno di quello consentiti in appsettings.json
-            // var orderOptions = CoursesOptions.CurrentValue.Order;
-            // if(!orderOptions.Allow.Contains(orderby))
-            // {
-            //     orderby = orderOptions.By;
-            //     ascending = orderOptions.Ascending;
-            // }
-
             IQueryable<Course> baseQuery = dbContext.Courses;
-            // uso l'extension method appropriato in base alla richiesta di ordinamento dell'utente
             switch(model.OrderBy)
             {
                 case "Title":
@@ -113,7 +94,6 @@ namespace MyCourse.Models.Services.Application
                     break;
             }
 
-            // prendo dal database usando la baseQuery con l'ordinamento scelto
             IQueryable<CourseViewModel> queriLinq = baseQuery
                 .Where(course => course.Title.Contains(model.Search))
                 .AsNoTracking()
@@ -128,14 +108,11 @@ namespace MyCourse.Models.Services.Application
                     CurrentPrice = course.CurrentPrice
                 });
 
-            // separo skip e take dalla query Linq sopra perchè quando poi rieseguo la query per avere
-            // il totale dei corsi, non devono essere paginati se no non riesco nel mio intento.
             List<CourseViewModel> courses = await queriLinq
                 .Skip(model.Offset)
                 .Take(model.Limit)
                 .ToListAsync();
                 
-            // faccio un'altra chiamata al database per avere il conteggio totale dei corsi(senza Skip e Take)
             int totalCount = await queriLinq.CountAsync();
             
             ListViewModel<CourseViewModel> result = new ListViewModel<CourseViewModel>{

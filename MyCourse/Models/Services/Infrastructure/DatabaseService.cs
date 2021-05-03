@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyCourse.Models.Options;
@@ -31,8 +30,6 @@ namespace MyCourse.Models.Services.Infrastructure
             for (var i = 0; i < queryArguments.Length; i++)
             {
                 if(queryArguments[i] is Sql){
-                    // se l'oggetto è di tipo Sql, classe creata da me, non renderlo un parametro;
-                    // vedi AdoNetCourseService in getCourses()
                     continue;
                 }
                 var parameter = new SqliteParameter(i.ToString(), queryArguments[i]);

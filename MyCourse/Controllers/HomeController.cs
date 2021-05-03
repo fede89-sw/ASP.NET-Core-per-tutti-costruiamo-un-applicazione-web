@@ -10,16 +10,19 @@ namespace MyCourse.Controllers
     // [ResponseCache(CacheProfileName = "Home")] 
     public class HomeController : Controller
     {
-        private readonly ICachedCourseService courseService;
-        public HomeController(ICachedCourseService courseService)
-        {
-            this.courseService = courseService;
+        // private readonly ICachedCourseService courseService;
+        // public HomeController(ICachedCourseService courseService)
+        // {
+        //     this.courseService = courseService;
 
-        }
+        // }
 
         [ResponseCache(CacheProfileName = "Home")]
-        // public IActionResult Index([FromServices] ICachedCourseService courseService)
-        public async Task<IActionResult> Index()
+        // passo courseService grazie ai ModelBinder, specificando [FromServices] sa che questo oggetto
+        // deve andarlo a prendere dagli oggetti registrati per la dependency injection.
+        // Potevo realizzare la stessa cosa usando il solito costruttore come nella parte commentata sopra
+        public async Task<IActionResult> Index([FromServices] ICachedCourseService courseService)
+        // public async Task<IActionResult> Index()
         {
             // per permettere al model Binding di fornirmi l'istanza di ICachedCourseService devo
             // specificare FromServices, ovvero di cercare la classe nei servizi registrati per la 

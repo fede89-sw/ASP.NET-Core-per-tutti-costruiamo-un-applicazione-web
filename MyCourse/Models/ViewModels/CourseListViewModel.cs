@@ -3,12 +3,23 @@ using MyCourse.Models.InputModels;
 
 namespace MyCourse.Models.ViewModels
 {
-    // Creo questa classe per passare alla View che visualizza l'elenco dei corsi, oltre la lista di questi
-    // anche gli input inseriti dall'utente, in modo da visualizzarli anche nella pagina di ricerca e/o
-    // per mantenere la preferenza di ordinamento 
-    public class CourseListViewModel
+    public class CourseListViewModel : IPaginationInfo
     {
         public ListViewModel<CourseViewModel> Courses { get; set; }
         public CourseListInputModel Input { get; set; }
+
+
+        // Implementazione esplicita di IPaginationInfo
+        int IPaginationInfo.CurrentPage => Input.Page;
+
+        int IPaginationInfo.TotalResults => Courses.TotalCount;
+
+        int IPaginationInfo.ResultsPerPage => Input.Limit;
+
+        string IPaginationInfo.Search => Input.Search;
+
+        string IPaginationInfo.OrderBy => Input.OrderBy;
+
+        bool IPaginationInfo.Ascending => Input.Ascending;
     }
 }

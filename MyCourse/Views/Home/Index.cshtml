@@ -20,26 +20,10 @@
             <p class="@course.Author">di @course.Author</p>
         </div>
         <div class="col-md-2 rating" title="@course.Rating">
-            @for(int i=1; i<=5; i++)
-            {
-                if(@course.Rating >= i)
-                {
-                    <i class="fas fa-star"></i>
-                }
-                else if(@course.Rating > i-1)
-                {
-                    <i class="fas fa-star-half-alt"></i>
-                }
-                else 
-                {
-                    <i class="far fa-star"></i>
-                }
-            }            
+            <rating value="@course.Rating"></rating>                      
         </div>
         <div class="col-md-2 price">
-            @course.CurrentPrice
-            @if(!@course.CurrentPrice.Equals(@course.FullPrice))
-            {<br><s>@course.FullPrice</s>}
+            <price current-price="@course.CurrentPrice" full-price="@course.FullPrice"></price>
         </div>
         <div class="col-md-2">
             <a asp-action="Detail" asp-controller="Courses" asp-route-id="@course.Id" class="btn btn-outline-primary">Dettagli</a>
@@ -65,9 +49,7 @@
             <rating value="@course.Rating"></rating>           
         </div>
         <div class="col-md-2 price">
-            @course.CurrentPrice
-            @if(!@course.CurrentPrice.Equals(@course.FullPrice))
-            {<br><s>@course.FullPrice</s>}
+            <price current-price="@course.CurrentPrice" full-price="@course.FullPrice"></price>
         </div>
         <div class="col-md-2">
             <a asp-action="Detail" asp-controller="Courses" asp-route-id="@course.Id" class="btn btn-outline-primary">Dettagli</a>

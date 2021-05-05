@@ -19,10 +19,7 @@
                     <rating value="@Model.Rating"></rating>
                 </div>
                 <div class="price">
-                    @Model.CurrentPrice
-                    @if(!Model.CurrentPrice.Equals(Model.FullPrice)) {
-                        <br><s>@Model.FullPrice</s>
-                    }
+                    <price current-price="@Model.CurrentPrice" full-price="@Model.FullPrice"></price> <br><s>@Model.FullPrice</s>
                 </div>
                 <img src="@Model.ImagePath" class="img-fluid course-image" alt="@Model.Title">
             </aside>

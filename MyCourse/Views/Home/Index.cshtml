@@ -8,51 +8,15 @@
 </div>
 
 <h2>I migliori di sempre</h2>
-@foreach (var course in Model.BestRatingCourses)
-{
-    <hr>
-    <div class="row course">
-        <div class="col-md-1">
-            <img src="@course.ImagePath" alt="town" width="50px">
-        </div>
-        <div class="col-md-5">
-            <h2>@course.Title</h2>
-            <p class="@course.Author">di @course.Author</p>
-        </div>
-        <div class="col-md-2 rating" title="@course.Rating">
-            <rating value="@course.Rating"></rating>                      
-        </div>
-        <div class="col-md-2 price">
-            <price current-price="@course.CurrentPrice" full-price="@course.FullPrice"></price>
-        </div>
-        <div class="col-md-2">
-            <a asp-action="Detail" asp-controller="Courses" asp-route-id="@course.Id" class="btn btn-outline-primary">Dettagli</a>
-        </div>
-    </div>
-}
+
+    @*  partial view. 
+        l'attributo 'name' indica dove si trova il file a partire dalla cartella Shared.
+        l'attributo 'model' è quello che gli passi, e deve chiamarsi proprio cosi. *@
+
+<partial name="Courses/_CourseList" model="@Model.BestRatingCourses"></partial>  
+
 
 <br><br>
 
 <h2>Aggiunti di recente</h2>
-@foreach (var course in Model.LatestCourses)
-{
-    <hr>
-    <div class="row course">
-        <div class="col-md-1">
-            <img src="@course.ImagePath" alt="town" width="50px">
-        </div>
-        <div class="col-md-5">
-            <h2>@course.Title</h2>
-            <p class="@course.Author">di @course.Author</p>
-        </div>
-        <div class="col-md-2 rating" title="@course.Rating">
-            <rating value="@course.Rating"></rating>           
-        </div>
-        <div class="col-md-2 price">
-            <price current-price="@course.CurrentPrice" full-price="@course.FullPrice"></price>
-        </div>
-        <div class="col-md-2">
-            <a asp-action="Detail" asp-controller="Courses" asp-route-id="@course.Id" class="btn btn-outline-primary">Dettagli</a>
-        </div>
-    </div>
-}
+<partial name="Courses/_CourseList" model="@Model.LatestCourses"></partial>  

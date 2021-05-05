@@ -25,34 +25,9 @@
     <div class="col-md-2"></div>
 </div>
 
-@foreach (CourseViewModel course in Model.Courses.Results)
-{
-    <hr>
-    <div class="row course">
-        <div class="col-md-1">
-            <img src="@course.ImagePath" alt="town" width="50px">
-        </div>
-        <div class="col-md-5">
-            <h2>@course.Title</h2>
-            <p class="@course.Author">di @course.Author</p>
-        </div>
-        <div class="col-md-2 rating" title="@course.Rating">
+@* Partial View per lista dei corsi *@
+<partial name="Courses/_CourseList" model="@Model.Courses.Results"></partial>
 
-            @*  tag helper personalizzato, per poter riutilizzare il codice e migliorare la 
-                leggibilità della View (il nome del tag e dell'attributo value sono arbitrari,
-                gli passo il valore da rappresentare, il rating il questo caso) *@
-            <rating value="@course.Rating"></rating>         
-
-        </div>
-        <div class="col-md-2 price">
-            <price current-price="@course.CurrentPrice" full-price="@course.FullPrice"></price>
-        </div>
-        <div class="col-md-2">
-            <a asp-action="Detail" asp-route-id="@course.Id" class="btn btn-outline-primary">Dettagli</a>
-        </div>
-    </div>
-}
 
 @* Paginazione dei Corsi utilizzando un ViewComponent *@
-
 <vc:pagination-bar model="@Model"></vc:pagination-bar>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using MyCourse.Models.Options;
 using MyCourse.Models.Services.Application;
@@ -28,7 +29,7 @@ namespace MyCourse
                 var homeProfile = new CacheProfile();
                 Configuration.Bind("ResponseCache:Home", homeProfile);      
                 options.CacheProfiles.Add("Home", homeProfile);
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // Usiamo AdoNet o EF per l'accesso ai dati?
             // services.AddTransient<ICourseService, AdoNetCourseService>();  
@@ -52,22 +53,32 @@ namespace MyCourse
             services.Configure<MemoryCacheOptions>(Configuration.GetSection("MemoryCache"));
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment()) {
+            if(env.IsEnvironment("Development"))
+            {
                 app.UseDeveloperExceptionPage();
             }
-            else {
+            else
+            {
                 app.UseExceptionHandler("/Error");
             }
 
             app.UseStaticFiles();
 
+            // Endpoint Routing Middleware
+            app.UseRouting();
+
             app.UseResponseCaching();
 
-            app.UseMvc( routeBuilder => {
-                routeBuilder.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); 
+            // Endpoint Middleware
+            app.UseEndpoints(routeBuilder => {
+                routeBuilder.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // app.UseMvc( routeBuilder => {
+            //     routeBuilder.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); 
+            // });
         }
     }
 }

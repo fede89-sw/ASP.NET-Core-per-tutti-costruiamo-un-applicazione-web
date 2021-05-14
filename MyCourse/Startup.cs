@@ -29,7 +29,12 @@ namespace MyCourse
                 var homeProfile = new CacheProfile();
                 Configuration.Bind("ResponseCache:Home", homeProfile);      
                 options.CacheProfiles.Add("Home", homeProfile);
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            // istruzioni per il preprocessore,che agisce subito prima della compilazione
+            #if DEBUG
+            .AddRazorRuntimeCompilation()
+            #endif
+            ;
 
             // Usiamo AdoNet o EF per l'accesso ai dati?
             // services.AddTransient<ICourseService, AdoNetCourseService>();  
